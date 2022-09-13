@@ -22,11 +22,14 @@ optional = true
 [tool.poetry.group.mordred.dependencies]
 mordred = "^1.2.0"
 
+
+[tool.poetry.group.dev.dependencies]
+black = {version = "^22.8.0", allow-prereleases = true}
+
 [tool.poetry.dev-dependencies]
 pdoc3 = "^0.9.1"
 pytest = "^6.2.5"
 ipykernel = "^6.6.1"
-black = {version = "^21.12b0", allow-prereleases = true}
 
 [build-system]
 requires = ["poetry_core>=1.0.0"]

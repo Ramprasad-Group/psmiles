@@ -15,12 +15,16 @@ from sklearn.metrics.pairwise import cosine_similarity
 from typing import Callable
 from canonicalize_psmiles.canonicalize import canonicalize as ext_canonicalize
 
+
 def copy_doc(copy_func: Callable) -> Callable:
     """Use Example: copy_doc(self.copy_func)(self.func) or used as deco"""
+
     def wrapper(func: Callable) -> Callable:
         func.__doc__ = copy_func.__doc__
         return func
+
     return wrapper
+
 
 class PolymerSmiles:
     def __init__(self, psmiles: str, deactivate_warnings: bool = False):
@@ -421,25 +425,29 @@ class PolymerSmiles:
             mols, molsPerRow=4, legends=names, subImgSize=(250, 200)
         )
 
+    def fingerprint(self, fp="PG"):
+        """Returns fingerprints of the PSMILES string.
 
-    def fingerprint(self, fp = 'PG'):
-        """Returns the fingerprint of the PSMILES string.
+        Note:
+            PSMILES strings are canonicalized for the computation
+            of the CI, mordred, and RDKit fingerprints.
 
         Args:
-            fp (str, optional): Choose fingerprint from PG, CI, or mordred. Defaults to 'PG'.
+            fp (str, optional): Choose fingerprint from PG, CI, rdkit, or mordred. Defaults to 'PG'.
 
         Returns:
             _type_: Fingerprint vector
-        """ 
-        if fp == 'PG':
+        """
+        if fp == "PG":
             return self.fingerprint_pg
         elif fp == "CI":
-            return self.fingerprint_circular
+            return self.canonicalize.fingerprint_circular
         elif fp == "mordred":
-            return self.fingerprint_mordred
+            return self.canonicalize.fingerprint_mordred
+        elif fp == "rdkit":
+            return self.canonicalize.fingerprint_rdkit
         else:
-            raise UserWarning(f'Fingerprint {fp} unknown.')
-                
+            raise UserWarning(f"Fingerprint {fp} unknown.")
 
     @property
     def fingerprint_pg(self) -> Dict[str, float]:
@@ -448,16 +456,15 @@ class PolymerSmiles:
         Returns:
             Dict[str, float]: PG fingerprints
         """
-        assert importlib.util.find_spec(
-            "pgfingerprinting"
-            ), ("pgfingerprinting python package is not installed. "
-                "Please install with `poetry install --with pg. "
-                "Package not available to the public.")
+        assert importlib.util.find_spec("pgfingerprinting"), (
+            "pgfingerprinting python package is not installed. "
+            "Please install with `poetry install --with pg. "
+            "Package not available to the public."
+        )
 
         from pgfingerprinting import fp as pgfp
+
         return pgfp.fingerprint_from_smiles(self.psmiles)
-
-
 
     @property
     def fingerprint_mordred(self) -> Dict[str, float]:
@@ -502,7 +509,6 @@ class PolymerSmiles:
 
         fp_gen = rdFingerprintGenerator.GetRDKitFPGenerator()
         fp_mono = fp_gen.GetCountFingerprintAsNumPy(self.mol).astype(int)
-        # fp_dimer = fp_gen.GetCountFingerprintAsNumPy(self.dimer.replace_stars('[At]').mol).astype(int)
         return fp_mono
 
     def is_similar(self, other: PolymerSmiles) -> float:
