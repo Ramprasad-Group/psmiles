@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "psmiles"
+version = "0.6.4"
+description = "A Python package for working with PSMILES (polymer SMILES) strings."
+authors = ["Christopher Kuenneth <christopher.kuenneth@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.11"
+numpy = ">1.19.0"
+pandas = ">1.1.0"
+rdkit = ">=2022.3.3"
+scikit-learn = "^1.1.2"
+canonicalize-psmiles = {git = "ssh://git@github.com/Ramprasad-Group/canonicalize_psmiles.git"}
+
+[tool.poetry.group.pg]
+optional = true
+[tool.poetry.group.pg.dependencies]
+pgfingerprinting = {git = "ssh://git@github.com/Ramprasad-Group/pgfingerprinting.git", rev = "main"}
+
+[tool.poetry.group.mordred]
+optional = true
+[tool.poetry.group.mordred.dependencies]
+mordred = "^1.2.0"
+
+[tool.poetry.dev-dependencies]
+pdoc3 = "^0.9.1"
+pytest = "^6.2.5"
+ipykernel = "^6.6.1"
+black = {version = "^21.12b0", allow-prereleases = true}
+
+[build-system]
+requires = ["poetry_core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

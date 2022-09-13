@@ -1,0 +1,1 @@
+from .psmiles import PolymerSmiles
