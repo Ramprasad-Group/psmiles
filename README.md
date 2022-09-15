@@ -18,12 +18,12 @@ Examples:
 - [x] Canonicalization of PSMILES (via https://github.com/Ramprasad-Group/canonicalize_psmiles)
 - [x] Dimerization of PSMILES
 - [x] Fingerprints (numerical representation)
+    - [x] polyBERT fingerprints (see arXiv) 
     - [x] Polymer Genome fingerprints (Ramprasad group internal only, not available to the public)
     - [x] Mordred fingerprints [https://github.com/mordred-descriptor/mordred](https://github.com/mordred-descriptor/mordred)
     - [x] Circular (Morgen) fingerprints as implemented in RDKit
     - [x] RDKit fingerprints as implemented in RDKit
-- [x] Fingerprints for ladder polymers
-     - [x] Only for PG fingerprints   
+- [x] Fingerprints for ladder polymers only for PG fingerprints
 - [x] Randomize PSMILES
 - [x] Polymer similarity based on fingerprints
 - [x] Create alternating copolymers from two PSMILES

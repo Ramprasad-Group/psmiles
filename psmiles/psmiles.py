@@ -5,7 +5,7 @@ import logging
 import pprint
 import re
 import sys
-from typing import Dict, Union
+from typing import Dict, List, Union
 
 import numpy as np
 from rdkit import Chem
@@ -441,13 +441,33 @@ class PolymerSmiles:
         if fp == "PG":
             return self.fingerprint_pg
         elif fp == "CI":
-            return self.canonicalize.fingerprint_circular
+            return self.fingerprint_circular
         elif fp == "mordred":
-            return self.canonicalize.fingerprint_mordred
+            return self.fingerprint_mordred
         elif fp == "rdkit":
-            return self.canonicalize.fingerprint_rdkit
+            return self.fingerprint_rdkit
+        elif fp == "polyBERT":
+            return self.fingerprint_polyBERT
         else:
             raise UserWarning(f"Fingerprint {fp} unknown.")
+
+    @property
+    def fingerprint_polyBERT(self) -> np.ndarray:
+        """Returns the PG fingerprint of the PSMILES string
+
+        Returns:
+            np.ndarray: polyBERT fingerprints
+        """
+        assert importlib.util.find_spec("sentence_transformers"), (
+            "sentence-transformers python package is not installed. "
+            "Please install with `poetry install --with polyBERT."
+        )
+
+        from sentence_transformers import SentenceTransformer
+
+        polyBERT = SentenceTransformer('kuelumbus/polyBERT')
+
+        return polyBERT.encode([self.canonicalize.psmiles])
 
     @property
     def fingerprint_pg(self) -> Dict[str, float]:
@@ -479,10 +499,11 @@ class PolymerSmiles:
         from mordred import Calculator, descriptors
 
         calc = Calculator(descriptors, ignore_3D=True)
-
-        dim = calc.pandas([self.dimer.replace_stars("[At]").mol], quiet=True, nproc=1)
-        mon = calc.pandas([self.replace_stars("[At]").mol], quiet=True, nproc=1)
+        cpsmiles = self.canonicalize
+        dim = calc.pandas([cpsmiles.dimer.replace_stars("[At]").mol], quiet=True, nproc=1)
+        mon = calc.pandas([cpsmiles.replace_stars("[At]").mol], quiet=True, nproc=1)
         fps = dim.fill_missing().T - mon.fill_missing().T
+
         return fps[0].to_dict()
 
     @property
@@ -496,7 +517,7 @@ class PolymerSmiles:
             numpy.ndarray: circular fingerprint
         """
 
-        return self.generator_circular.GetCountFingerprintAsNumPy(self.mol).astype(int)
+        return self.generator_circular.GetCountFingerprintAsNumPy(self.canonicalize.mol).astype(int)
 
     @property
     def fingerprint_rdkit(self) -> np.ndarray:
@@ -508,7 +529,7 @@ class PolymerSmiles:
         from rdkit.Chem import rdFingerprintGenerator
 
         fp_gen = rdFingerprintGenerator.GetRDKitFPGenerator()
-        fp_mono = fp_gen.GetCountFingerprintAsNumPy(self.mol).astype(int)
+        fp_mono = fp_gen.GetCountFingerprintAsNumPy(self.canonicalize.mol).astype(int)
         return fp_mono
 
     def is_similar(self, other: PolymerSmiles) -> float:

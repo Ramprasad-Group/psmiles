@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "psmiles"
-version = "0.6.4"
+version = "0.6.5"
 description = "A Python package for working with PSMILES (polymer SMILES) strings."
 authors = ["Christopher Kuenneth <christopher.kuenneth@gmail.com>"]
 
@@ -22,6 +22,10 @@ optional = true
 [tool.poetry.group.mordred.dependencies]
 mordred = "^1.2.0"
 
+[tool.poetry.group.polyBERT]
+optional = true
+[tool.poetry.group.polyBERT.dependencies]
+sentence-transformers = "^2.2.0"
 
 [tool.poetry.group.dev.dependencies]
 black = {version = "^22.8.0", allow-prereleases = true}
