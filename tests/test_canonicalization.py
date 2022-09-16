@@ -1,4 +1,4 @@
-from psmiles import PolymerSmiles
+from psmiles import PolymerSmiles as PS
 
 
 def test_canonicalize_one():
@@ -18,7 +18,7 @@ def test_canonicalize_one():
 
     canonicalize_smiles = []
     for s in sm_init:
-        canonicalize_smiles.append(PolymerSmiles(s).canonicalize.psmiles)
+        canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     one_smiles = list(set(canonicalize_smiles))
 
     # assert one_smiles == ["[*]=CNc1ccc(N=[*])cc1"]
@@ -40,7 +40,7 @@ def test_canonicalize_two():
 
     canonicalize_smiles = []
     for s in sm_init:
-        canonicalize_smiles.append(PolymerSmiles(s).canonicalize.psmiles)
+        canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     one_smiles = list(set(canonicalize_smiles))
 
     assert one_smiles == ["[*]COC[*]"]
@@ -66,7 +66,7 @@ def test_canonicalize_three():
 
     canonicalize_smiles = []
     for s in sm_init:
-        canonicalize_smiles.append(PolymerSmiles(s).canonicalize.psmiles)
+        canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     one_smiles = list(set(canonicalize_smiles))
     assert one_smiles == ["[*]COC[*]"]
 
@@ -88,7 +88,7 @@ def test_canonicalize_four():
 
     canonicalize_smiles = []
     for s in sm_init:
-        canonicalize_smiles.append(PolymerSmiles(s).canonicalize.psmiles)
+        canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     one_smiles = list(set(canonicalize_smiles))
 
     assert one_smiles == [
@@ -108,7 +108,7 @@ def test_canonicalize_five():
 
     canonicalize_smiles = []
     for s in sm_init:
-        canonicalize_smiles.append(PolymerSmiles(s).canonicalize.psmiles)
+        canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     two_smiles = list(set(canonicalize_smiles))
     two_smiles = sorted(two_smiles)
 
@@ -124,7 +124,7 @@ def test_canonicalize_six():
     ]
     canonicalize_smiles = []
     for s in sm_init:
-        canonicalize_smiles.append(PolymerSmiles(s).canonicalize.psmiles)
+        canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     one_smiles = list(set(canonicalize_smiles))
 
     assert one_smiles == ["[*]C=CC(C)(C)C([*])(C)C"]
@@ -151,7 +151,7 @@ def test_canonicalize_seven():
 
     canonicalize_smiles = []
     for s in sm_init:
-        canonicalize_smiles.append(PolymerSmiles(s).canonicalize.psmiles)
+        canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     one_smiles = list(set(canonicalize_smiles))
 
     assert one_smiles == ["[*]/C=C(\[*])C(C)(C)C"]
@@ -176,7 +176,7 @@ def test_canonicalize_polystyrene():
 
     canonicalize_smiles = []
     for s in sm_init:
-        canonicalize_smiles.append(PolymerSmiles(s).canonicalize.psmiles)
+        canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     one_smiles = list(set(canonicalize_smiles))
 
     assert one_smiles == ["[*]CC([*])c1ccccc1"]
@@ -200,7 +200,7 @@ def test_canonicalize_cis_trans():
 
     canonicalize_smiles = []
     for s in sm_init:
-        canonicalize_smiles.append(PolymerSmiles(s).canonicalize.psmiles)
+        canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     one_smiles = list(set(canonicalize_smiles))
 
     assert one_smiles == ["[*]/C=C(/[*])C(C)(C)C"]
@@ -213,7 +213,7 @@ def test_canonicalize_polyethylene():
 
     canonicalize_smiles = []
     for s in sm_init:
-        canonicalize_smiles.append(PolymerSmiles(s).canonicalize.psmiles)
+        canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     one_smiles = list(set(canonicalize_smiles))
 
     assert one_smiles == ["[*]C[*]"]
@@ -237,7 +237,7 @@ def test_canonicalize_tricky():
 
     canonicalize_smiles = []
     for s in sm_init:
-        canonicalize_smiles.append(PolymerSmiles(s).canonicalize.psmiles)
+        canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     one_smiles = list(set(canonicalize_smiles))
 
     assert one_smiles == ["[*]c1cc(CCCCCCO[Si](C)(C)C)c([*])s1"]
@@ -250,7 +250,7 @@ def test_canonicalize_connected_neighbors():
 
     canonicalize_smiles = []
     for s in sm_init:
-        canonicalize_smiles.append(PolymerSmiles(s).canonicalize.psmiles)
+        canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     one_smiles = list(set(canonicalize_smiles))
 
     assert one_smiles == ["[*]/C=C(\[*])C(C)(C)C"]
@@ -274,7 +274,7 @@ def test_canonicalize_same_neighbors():
 
     canonicalize_smiles = []
     for s in sm_init:
-        canonicalize_smiles.append(PolymerSmiles(s).canonicalize.psmiles)
+        canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     one_smiles = list(set(canonicalize_smiles))
 
     assert one_smiles == ["[*]C([*])(F)F"]
@@ -298,7 +298,7 @@ def test_canonicalize_tricky():
     ]
     canonicalize_smiles = []
     for s in sm_init:
-        canonicalize_smiles.append(PolymerSmiles(s).canonicalize.psmiles)
+        canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     one_smiles = list(set(canonicalize_smiles))
 
     assert one_smiles == [
@@ -312,7 +312,7 @@ def test_canonicalize_all_in_ring():
 
     canonicalize_smiles = []
     for s in sm_init:
-        canonicalize_smiles.append(PolymerSmiles(s).canonicalize.psmiles)
+        canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     one_smiles = list(set(canonicalize_smiles))
 
     assert one_smiles == ["[*]C1C=CC([*])CC1"]
@@ -335,7 +335,7 @@ def test_canonicalize_break_aromatic():
 
     canonicalize_smiles = []
     for s in sm_init:
-        canonicalize_smiles.append(PolymerSmiles(s).canonicalize.psmiles)
+        canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     one_smiles = list(set(canonicalize_smiles))
     assert one_smiles == ['[*]C=Cc1sc([*])c(OCCCC)c1OCCCC']
 
@@ -347,7 +347,7 @@ def test_canonicalize_multiple():
 
     canonicalize_smiles = []
     for s in sm_init:
-        canonicalize_smiles.append(PolymerSmiles(s).canonicalize.psmiles)
+        canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     one_smiles = list(set(canonicalize_smiles))
     assert one_smiles == ['[*]c1sc(-c2sc(-c3sc([*])c4nccnc34)c3c2OCCO3)c2c1OCCO2']
 

@@ -1,4 +1,4 @@
-from psmiles import PolymerSmiles
+from psmiles import PolymerSmiles as PS
 
 
 def test_dimer_double_bonds_at_star():
@@ -17,7 +17,7 @@ def test_dimer_double_bonds_at_star():
 
     dimerized = []
     for s in sms:
-        dimerized.append(PolymerSmiles(s).canonicalize.dimer().psmiles)
+        dimerized.append(PS(s).canonicalize.dimer().psmiles)
     one_smiles = list(set(dimerized))
 
     assert one_smiles == ["[*]c1ccc(N=CNNC=Nc2ccc([*])cc2)cc1"]
@@ -39,7 +39,7 @@ def test_dimer_double_bonds_at_star_complicated():
 
     dimerized = []
     for s in sms:
-        dimerized.append(PolymerSmiles(s).canonicalize.dimer().psmiles)
+        dimerized.append(PS(s).canonicalize.dimer().psmiles)
     one_smiles = list(set(dimerized))
 
     assert one_smiles == [
@@ -63,7 +63,7 @@ def test_dimer_stereo_chemistry():
 
     dimerized = []
     for s in sms:
-        dimerized.append(PolymerSmiles(s).canonicalize.dimer().psmiles)
+        dimerized.append(PS(s).canonicalize.dimer().psmiles)
     one_smiles = list(set(dimerized))
 
     assert one_smiles == [
@@ -87,7 +87,7 @@ def test_dimer_stereo_chemistry_cis():
 
     dimerized = []
     for s in sms:
-        dimerized.append(PolymerSmiles(s).canonicalize.dimer().psmiles)
+        dimerized.append(PS(s).canonicalize.dimer().psmiles)
     one_smiles = list(set(dimerized))
 
     assert one_smiles == ["[*]=CCCC=CCCC=[*]"]
@@ -97,7 +97,7 @@ def test_dimer_stereo_chemistry_trans():
     sms = ["[*]/C=C(/[*])C(C)(C)", "[*]\C=C(\[*])C(C)(C)"]
     dimerized = []
     for s in sms:
-        dimerized.append(PolymerSmiles(s).canonicalize.dimer().psmiles)
+        dimerized.append(PS(s).canonicalize.dimer().psmiles)
     one_smiles = list(set(dimerized))
 
     assert one_smiles == ["[*]/C(=C/C=C(/[*])C(C)C)C(C)C"]
