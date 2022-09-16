@@ -17,10 +17,10 @@ def test_dimer_double_bonds_at_star():
 
     dimerized = []
     for s in sms:
-        dimerized.append(PolymerSmiles(s).dimer.psmiles)
+        dimerized.append(PolymerSmiles(s).canonicalize.dimer().psmiles)
     one_smiles = list(set(dimerized))
 
-    assert one_smiles == ["[*]=CNc1ccc(N=CNc2ccc(N=[*])cc2)cc1"]
+    assert one_smiles == ["[*]c1ccc(N=CNNC=Nc2ccc([*])cc2)cc1"]
 
 
 def test_dimer_double_bonds_at_star_complicated():
@@ -39,11 +39,11 @@ def test_dimer_double_bonds_at_star_complicated():
 
     dimerized = []
     for s in sms:
-        dimerized.append(PolymerSmiles(s).dimer.psmiles)
+        dimerized.append(PolymerSmiles(s).canonicalize.dimer().psmiles)
     one_smiles = list(set(dimerized))
 
     assert one_smiles == [
-        "[*]=Nc1ccc(N=C(C)Nc2ccc(-c3ccc(NC(C)=Nc4ccc(N=C(C)Nc5ccc(-c6ccc(NC(=[*])C)c(C(=O)O)c6)cc5C(=O)O)cc4)c(C(=O)O)c3)cc2C(=O)O)cc1"
+        "[*]=C(C)Nc1ccc(-c2ccc(NC(C)=Nc3ccc(N=Nc4ccc(N=C(C)Nc5ccc(-c6ccc(NC(=[*])C)c(C(=O)O)c6)cc5C(=O)O)cc4)cc3)c(C(=O)O)c2)cc1C(=O)O"
     ]
 
 
@@ -63,11 +63,11 @@ def test_dimer_stereo_chemistry():
 
     dimerized = []
     for s in sms:
-        dimerized.append(PolymerSmiles(s).dimer.psmiles)
+        dimerized.append(PolymerSmiles(s).canonicalize.dimer().psmiles)
     one_smiles = list(set(dimerized))
 
     assert one_smiles == [
-        "[*]/C=C\C(C/C=C\C(C[*])CCCOC(=O)/C=C/c1ccccc1)CCCOC(=O)/C=C/c1ccccc1"
+        "[*]C(CC=CC=CCC([*])CCCOC(=O)/C=C/c1ccccc1)CCCOC(=O)/C=C/c1ccccc1"
     ]
 
 
@@ -87,22 +87,17 @@ def test_dimer_stereo_chemistry_cis():
 
     dimerized = []
     for s in sms:
-        dimerized.append(PolymerSmiles(s).dimer.psmiles)
+        dimerized.append(PolymerSmiles(s).canonicalize.dimer().psmiles)
     one_smiles = list(set(dimerized))
 
-    assert one_smiles == [
-        "[*]/C=C\CC/C=C\CC[*]"
-    ]
+    assert one_smiles == ["[*]=CCCC=CCCC=[*]"]
 
 
 def test_dimer_stereo_chemistry_trans():
-    sms = ['[*]/C=C(/[*])C(C)(C)','[*]\C=C(\[*])C(C)(C)']
+    sms = ["[*]/C=C(/[*])C(C)(C)", "[*]\C=C(\[*])C(C)(C)"]
     dimerized = []
     for s in sms:
-        dimerized.append(PolymerSmiles(s).dimer.psmiles)
+        dimerized.append(PolymerSmiles(s).canonicalize.dimer().psmiles)
     one_smiles = list(set(dimerized))
 
-    assert one_smiles == [
-        "[*]/C=C(/C=C(/[*])C(C)C)C(C)C"
-    ]
-
+    assert one_smiles == ["[*]/C(=C/C=C(/[*])C(C)C)C(C)C"]
