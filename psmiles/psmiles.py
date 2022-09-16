@@ -8,38 +8,27 @@ import sys
 from typing import Dict, List, Union
 
 import numpy as np
+import pandas as pd
 from rdkit import Chem
 from rdkit.Chem import rdFingerprintGenerator
 from rdkit.Chem.inchi import MolToInchi, MolToInchiKey
 from sklearn.metrics.pairwise import cosine_similarity
-from typing import Callable
+from psmiles.helper import copy_doc
 from canonicalize_psmiles.canonicalize import canonicalize as ext_canonicalize
-
-
-def copy_doc(copy_func: Callable) -> Callable:
-    """Use Example: copy_doc(self.copy_func)(self.func) or used as deco"""
-
-    def wrapper(func: Callable) -> Callable:
-        func.__doc__ = copy_func.__doc__
-        return func
-
-    return wrapper
 
 
 class PolymerSmiles:
     def __init__(self, psmiles: str, deactivate_warnings: bool = False):
-        """PolymerSmiles ::  Fun with polymer SMILES strings.
+        """
+        PolymerSmiles - Fun with PSMILES strings.
 
-        Note:
-            Polymer SMILES strings must have two \* or [\*]
-            Or, ladder polymers must have
-            [e] <-> [t] and
-            [d] <-> [g]
+        PSMILES strings have two \* or [\*] that indicate the polymer repeat unit.
 
         Args:
-            psmiles (str): PSMILES string, e.g. [*]CC[*]
+            psmiles (str): PSMILES string, e.g., [\*]CC[\*]
             deactivate_warnings (bool, optional): Deactivate warnings. Defaults to False.
         """
+
         self.psmiles = psmiles
         self.ladder = False
         self.generator_circular = rdFingerprintGenerator.GetMorganGenerator()
@@ -86,10 +75,20 @@ class PolymerSmiles:
                 "tested for ladder polymers."
             )
 
+    def __repr__(self) -> str:
+        st = f"{self.psmiles}"
+        return st
+
+    def __str__(self) -> str:
+        return self.psmiles
+
+    def _repr_png_(self):
+        print(f"SMILES: {self.__repr__()}")
+        if not self.ladder:
+            return self.mol._repr_png_()
+
     def check_double_bonds_at_connection(self):
-        """Check if SMILES has double bonds at both *
-        (and not only at on *)
-        """
+        """Check if bonds types (single, double) are the same at the stars."""
 
         # get connection info
         info = self.get_connection_info()
@@ -104,13 +103,16 @@ class PolymerSmiles:
     def get_connection_info(self, mol: Chem.RWMol = None, symbol="*") -> Dict:
         """Get connection information of stars and neighbors.
 
+        If mol not specified, use self.mol.
+
         Args:
-            mol (Chem.RWMol, optional): _description_. Defaults to None.
-            symbol (str, optional): _description_. Defaults to "*".
+            mol (Chem.RWMol, optional): RDKit mol object. Defaults to None.
+            symbol (str, optional): Indicate the polymer repeat unit. Defaults to "*".
 
         Returns:
-            Dict: Dictionary with some info
+            Dict: Dictionary with information on stars and neighbors.
         """
+
         ret_dict = {}
         if mol is None:
             mol = self.mol
@@ -196,27 +198,14 @@ class PolymerSmiles:
 
         return ret_dict
 
-    def __repr__(self) -> str:
-        st = f"{self.psmiles}"
-        return st
-
-    def __str__(self) -> str:
-        return self.psmiles
-
-    def _repr_png_(self):
-        """Display PSMILES PNG in Jupyter notebook."""
-        print(f"SMILES: {self.__repr__()}")
-        if not self.ladder:
-            return self.mol._repr_png_()
-
     def replace_stars(self, _with: str) -> PolymerSmiles:
-        """Replace stars with other characters
+        """Replace stars with other characters.
 
         Args:
             _with (str): Replacement characters
 
         Returns:
-            PolymerSmiles: replaced polymer SMILES
+            PolymerSmiles: PSMILES string with new symbols for repeat unit endpoints
         """
         return PolymerSmiles(
             self.psmiles.replace("[*]", _with), deactivate_warnings=True
@@ -224,7 +213,7 @@ class PolymerSmiles:
 
     @property
     def randomize(self) -> PolymerSmiles:
-        """Return randomized PSMILES string
+        """Randomized PSMILES string
 
         Returns:
             PolymerSmiles: randomized PSMILES string
@@ -236,16 +225,15 @@ class PolymerSmiles:
         return PolymerSmiles(sm)
 
     def nb_display(self, mol):
-        """Helper function to display polymer for debug"""
         print(f"SMILES: {Chem.MolToCXSmiles(mol)}")
         display(mol)
 
     @property
-    def cyclic(self) -> PolymerSmiles:
-        """Returns a cyclic SMILES string
+    def periodic(self) -> PolymerSmiles:
+        """Creates periodic PSMILES string. Connects the end points of the PSMILES string.
 
         Returns:
-            PolymerSmiles: cyclic SMILES string
+            PolymerSmiles: periodic PSMILES string
         """
         logging.warning("Function is experimental. Please check results carefully.")
 
@@ -254,7 +242,7 @@ class PolymerSmiles:
         symbols = [a.GetSymbol() for a in mol.GetAtoms()]
         atom_idx_star = [n for n, sym in enumerate(symbols) if sym == "*"]
 
-        # Chose bondtyp ~
+        # Chose bond typ ~
         bond_type = Chem.rdchem.BondType.UNSPECIFIED
 
         mol.AddBond(atom_idx_star[0], atom_idx_star[1], bond_type)
@@ -264,15 +252,19 @@ class PolymerSmiles:
         return PolymerSmiles(sm)
 
     @property
-    @copy_doc(ext_canonicalize)
     def canonicalize(self) -> PolymerSmiles:
+        """Canonicalize the PSMILES string
+
+        Returns:
+            PolymerSmiles: canonicalized PSMILES string
+        """
         return PolymerSmiles(ext_canonicalize(self.psmiles))
 
     @property
     def inchi(self) -> str:
-        """Returns the InChI string of the SMILES.
+        """Compute the InChI string of the PSMILES.
 
-        [\*] is replaced with [At] in the output. Uses RDKit's MolToInchi
+        [\*] is replaced with [At] to use RDKit's MolToInchi method
 
         Returns:
             str: InChI string
@@ -281,9 +273,9 @@ class PolymerSmiles:
 
     @property
     def inchi_key(self) -> str:
-        """Returns the InChI key of the SMILES.
+        """Compute the InChI key of the SMILES.
 
-        [\*] is replaced with [At]. Uses RDKit's MolToInchiKey
+        [\*] is replaced with [At] to use RDKit's MolToInchiKey method
 
         Returns:
             str: InChI key
@@ -292,28 +284,27 @@ class PolymerSmiles:
 
     @property
     def as_dict(self) -> dict:
-        """Returns a dictionary of all transformations.
+        """Returns a dictionary of many properties
 
         Inchi/keys are computed from the canonicalized SMILES string
 
         Returns:
             dict: dictionary of SMILES transformations
         """
-        d = dict(
+        return dict(
             smiles=self.psmiles,
             dimer=self.dimer.__str__(),
             canonicalized=self.canonicalize.__str__(),
             inchi=self.canonicalize.inchi,
             inchi_key=self.canonicalize.inchi_key,
         )
-        return d
 
     @property
     def dimer(self) -> PolymerSmiles:
-        """Dimerize the SMILES string
+        """Dimerize the PSMILES string
 
         Returns:
-            PolymerSmiles: dimerized SMILES string
+            PolymerSmiles: dimerized PSMILES string
         """
         # Make atom indices visable
         if logging.DEBUG >= logging.root.level:
@@ -395,7 +386,7 @@ class PolymerSmiles:
             In jupyter notebooks, this function draws the SMILES string
 
         Returns:
-            Chem.MolFromSmiles: Mol object
+            Chem.MolFromSmiles: RDKit mol object
         """
         return Chem.RWMol(Chem.MolFromSmiles(self.psmiles))
 
@@ -425,22 +416,22 @@ class PolymerSmiles:
             mols, molsPerRow=4, legends=names, subImgSize=(250, 200)
         )
 
-    def fingerprint(self, fp="PG"):
+    def fingerprint(self, fp="ci"):
         """Returns fingerprints of the PSMILES string.
 
         Note:
             PSMILES strings are canonicalized for the computation
-            of the CI, mordred, and RDKit fingerprints.
+            of the ci, mordred, and RDKit fingerprints.
 
         Args:
-            fp (str, optional): Choose fingerprint from PG, CI, rdkit, or mordred. Defaults to 'PG'.
+            fp (str, optional): Choose fingerprint from pg, ci, rdkit, or mordred. Defaults to 'ci'.
 
         Returns:
             _type_: Fingerprint vector
         """
-        if fp == "PG":
+        if fp == "pg":
             return self.fingerprint_pg
-        elif fp == "CI":
+        elif fp == "ci":
             return self.fingerprint_circular
         elif fp == "mordred":
             return self.fingerprint_mordred
@@ -453,7 +444,10 @@ class PolymerSmiles:
 
     @property
     def fingerprint_polyBERT(self) -> np.ndarray:
-        """Returns the PG fingerprint of the PSMILES string
+        """Returns the polyBERT fingerprint of the PSMILES string
+
+        Note:
+            This will install pull polyBERT from the hugging face hub.
 
         Returns:
             np.ndarray: polyBERT fingerprints
@@ -465,9 +459,9 @@ class PolymerSmiles:
 
         from sentence_transformers import SentenceTransformer
 
-        polyBERT = SentenceTransformer('kuelumbus/polyBERT')
+        polyBERT = SentenceTransformer("kuelumbus/polyBERT")
 
-        return polyBERT.encode([self.canonicalize.psmiles])
+        return polyBERT.encode([self.canonicalize.psmiles], show_progress_bar=False)[0]
 
     @property
     def fingerprint_pg(self) -> Dict[str, float]:
@@ -488,7 +482,10 @@ class PolymerSmiles:
 
     @property
     def fingerprint_mordred(self) -> Dict[str, float]:
-        """Return mordred fingerprints
+        """Returns the mordred fingerprint
+
+        Note:
+            PSMILES string is canonicalized before computation
 
         Returns:
             Dict[str, float]: mordred fingerprints
@@ -499,9 +496,11 @@ class PolymerSmiles:
         from mordred import Calculator, descriptors
 
         calc = Calculator(descriptors, ignore_3D=True)
-        cpsmiles = self.canonicalize
-        dim = calc.pandas([cpsmiles.dimer.replace_stars("[At]").mol], quiet=True, nproc=1)
-        mon = calc.pandas([cpsmiles.replace_stars("[At]").mol], quiet=True, nproc=1)
+        can_smiles = self.canonicalize
+        dim = calc.pandas(
+            [can_smiles.dimer.replace_stars("[At]").mol], quiet=True, nproc=1
+        )
+        mon = calc.pandas([can_smiles.replace_stars("[At]").mol], quiet=True, nproc=1)
         fps = dim.fill_missing().T - mon.fill_missing().T
 
         return fps[0].to_dict()
@@ -510,18 +509,23 @@ class PolymerSmiles:
     def fingerprint_circular(self) -> np.ndarray:
         """Returns the circular (Morgen) count fingerprint
 
-        Note that these fingerprint vary with the writing of
-        the PSMILES string. Canonicalize before computing the fingerprint.
+        Note:
+            PSMILES string is canonicalized before computation
 
         Returns:
             numpy.ndarray: circular fingerprint
         """
 
-        return self.generator_circular.GetCountFingerprintAsNumPy(self.canonicalize.mol).astype(int)
+        return self.generator_circular.GetCountFingerprintAsNumPy(
+            self.canonicalize.mol
+        ).astype(int)
 
     @property
     def fingerprint_rdkit(self) -> np.ndarray:
         """Returns the RDKit count fingerprint
+
+        Note:
+            PSMILES string is canonicalized before computation
 
         Returns:
             numpy.ndarray: RDKit fingerprint
@@ -532,41 +536,45 @@ class PolymerSmiles:
         fp_mono = fp_gen.GetCountFingerprintAsNumPy(self.canonicalize.mol).astype(int)
         return fp_mono
 
-    def is_similar(self, other: PolymerSmiles) -> float:
-        """Measures the cosine similarity between two SMILES stings.
+    def is_similar(self, other: Union[PolymerSmiles, str], fp="CI") -> float:
+        """Computes the cosine similarity of two PSMILES stings.
 
         Args:
-            other (PolymerSmiles): other SMILES string
+            other (Union[PolymerSmiles, str]): other PSMILES string
 
         Returns:
             float: cosine similarity
         """
+        if not isinstance(other, PolymerSmiles):
+            other = PolymerSmiles(other)
 
-        fp1 = self.fingerprint
-        fp2 = other.fingerprint
-        intersection = [[fp1[x], fp2[x]] for x in fp1 if x in fp2]
-        intersection = np.array(intersection).T
-        return round(cosine_similarity(intersection)[0, 1], 5)
+        fp1 = self.fingerprint(fp)
+        fp2 = other.fingerprint(fp)
 
-    def alternating_copolymer(self, other: Union[PolymerSmiles, str]):
-        """Combines two SMILES strings to one (composition 0.5) alternating copolymer,
-           essentially a homopolymer.
+        df = pd.DataFrame([fp1, fp2]).fillna(0)
 
-        TODO:
-            Should have a switch to define how to combine two polymers
+        return round(cosine_similarity(df)[0, 1], 5)
+
+    def alternating_copolymer(
+        self, other: Union[PolymerSmiles, str], how: List[int] = [0, 1]
+    ):
+        """Creates alternating copolymer from two PSMILES strings.
+
+        Note:
+            There are four possible ways of combining two PSMILES strings
 
         Args:
-            other (PolymerSmiles): Second polymer string
+            other (Union[PolymerSmiles, str]): Second PSMILES string
+            how (List[int]): 0 for first star; 1 for second star.
+                             [0, 0], [0, 1], [1, 0], [1, 1]. Defaults to [0,1]
 
         Returns:
-            PolymerSmiles: copolymer SMILES
+            PolymerSmiles: alternating copolymer PSMILES
         """
         logging.warning("Function is experimental. Please check results carefully.")
 
         if not isinstance(other, PolymerSmiles):
             other = PolymerSmiles(other)
-
-        _m = Chem.MolToSmiles
 
         symbols1 = [a.GetSymbol() for a in self.mol.GetAtoms()]
         idx_star1 = [n for n, sym in enumerate(symbols1) if sym == "*"]
@@ -576,16 +584,24 @@ class PolymerSmiles:
 
         # combine two mols
         ed = Chem.RWMol(Chem.CombineMols(self.mol, other.mol))
+        logging.debug(f"(1) Combine both PSMILES")
+        if logging.DEBUG >= logging.root.level:
+            self.nb_display(ed)
 
-        # Chose bondtyp ~
+        # Chose bond typ ~
         bond_type = Chem.rdchem.BondType.UNSPECIFIED
 
         # Connect stars
         # Can be [0,0], [0,1], [1,0], [1,1]
-        ed.AddBond(idx_star1[0], idx_star2[0] + len(symbols1), order=bond_type)
+        ed.AddBond(
+            idx_star1[how[0]], idx_star2[how[1]] + len(symbols1), order=bond_type
+        )
+        logging.debug(f"(2) Add bond: {how}")
+        if logging.DEBUG >= logging.root.level:
+            self.nb_display(ed)
 
         # Get dimer smiles
-        sm = _m(ed)
+        sm = Chem.MolToSmiles(ed, canonical=True)
 
         # Remove stars connection *~*, and cis and trans around *~*
         patterns = [r"\\*~*\\", "/*~*/", "/*~*\\", "\\*~*/", "*~*"]

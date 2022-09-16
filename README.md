@@ -14,7 +14,6 @@ Examples:
 
 ## Features, functions, and roadmap
 
-- [x] polyBERT-based property predictions for PSMILES strings
 - [x] Canonicalization of PSMILES (via https://github.com/Ramprasad-Group/canonicalize_psmiles)
 - [x] Dimerization of PSMILES
 - [x] Fingerprints (numerical representation)
@@ -33,6 +32,12 @@ Examples:
 
 ```bash
 poetry add git+ssh://git@github.com/Ramprasad-Group/psmiles.git
+```
+
+With polyBERT fingerprints
+
+```bash
+poetry add git+ssh://git@github.com/Ramprasad-Group/psmiles.git --with polyBERT
 ```
 
 With mordred fingerprints
