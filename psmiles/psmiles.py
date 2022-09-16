@@ -264,44 +264,34 @@ class PolymerSmiles:
     def inchi(self) -> str:
         """Compute the InChI string of the PSMILES.
 
-        [\*] is replaced with [At] to use RDKit's MolToInchi method
+        Note:
+            [\*] is replaced with [At] to use RDKit's MolToInchi method
+            PSMILES string is canonicalized
 
         Returns:
             str: InChI string
         """
-        return MolToInchi(Chem.MolFromSmiles(self.psmiles.replace("[*]", "[At]")))
+        return MolToInchi(Chem.MolFromSmiles(self.canonicalize.psmiles.replace("[*]", "[At]")))
 
     @property
     def inchi_key(self) -> str:
         """Compute the InChI key of the SMILES.
 
-        [\*] is replaced with [At] to use RDKit's MolToInchiKey method
+        Note: 
+            [\*] is replaced with [At] to use RDKit's MolToInchiKey method
+            PSMILES string is canonicalized
 
         Returns:
             str: InChI key
         """
-        return MolToInchiKey(Chem.MolFromSmiles(self.psmiles.replace("[*]", "[At]")))
+        return MolToInchiKey(Chem.MolFromSmiles(self.canonicalize.psmiles.replace("[*]", "[At]")))
 
-    @property
-    def as_dict(self) -> dict:
-        """Returns a dictionary of many properties
-
-        Inchi/keys are computed from the canonicalized SMILES string
-
-        Returns:
-            dict: dictionary of SMILES transformations
-        """
-        return dict(
-            smiles=self.psmiles,
-            dimer=self.dimer.__str__(),
-            canonicalized=self.canonicalize.__str__(),
-            inchi=self.canonicalize.inchi,
-            inchi_key=self.canonicalize.inchi_key,
-        )
-
-    @property
-    def dimer(self) -> PolymerSmiles:
+    
+    def dimer(self, how: int = 0) -> PolymerSmiles:
         """Dimerize the PSMILES string
+        
+        Args:
+            how (int): 0 to connect to first start. 1 to connect to second star.
 
         Returns:
             PolymerSmiles: dimerized PSMILES string
@@ -311,8 +301,6 @@ class PolymerSmiles:
             from rdkit.Chem.Draw import IPythonConsole
 
             IPythonConsole.drawOptions.addAtomIndices = True
-
-        _m = Chem.MolToSmiles
 
         mol = self.mol
         info = self.get_connection_info(mol)
@@ -332,21 +320,14 @@ class PolymerSmiles:
 
         # Remove stars and add bonds between neighbors
 
-        # Two connection possibilities
+        # Two connection possibilities, how can be 0 or 1
         connect = [
-            info["star"]["index"][0],
-            info["star"]["index"][1] + len(info["symbols"]),
-        ]
-        connect2 = [
-            info["star"]["index"][0],
-            info["star"]["index"][0] + len(info["symbols"]),
-        ]
+                info["star"]["index"][0],
+                info["star"]["index"][how] + len(info["symbols"]),
+            ]
 
         logging.debug(
             f"(3) Connect star atoms {connect[0]} and {connect[1]} with {bond_type = }"
-        )
-        logging.debug(
-            f"Alternative: connect star atoms {connect2[0]} and {connect2[1]} with {bond_type = }"
         )
 
         mol_combined.AddBond(connect[0], connect[1], order=bond_type)
@@ -404,12 +385,12 @@ class PolymerSmiles:
         mols = [
             self.mol,
             self.canonicalize.mol,
-            self.dimer.mol,
+            self.dimer().mol,
         ]
         names = [
             "SMI=" + self.psmiles,
             "Can= " + self.canonicalize.psmiles,
-            "Dim=" + self.dimer.psmiles,
+            "Dim=" + self.dimer().psmiles,
         ]
 
         return Chem.Draw.MolsToGridImage(
@@ -498,7 +479,7 @@ class PolymerSmiles:
         calc = Calculator(descriptors, ignore_3D=True)
         can_smiles = self.canonicalize
         dim = calc.pandas(
-            [can_smiles.dimer.replace_stars("[At]").mol], quiet=True, nproc=1
+            [can_smiles.dimer().replace_stars("[At]").mol], quiet=True, nproc=1
         )
         mon = calc.pandas([can_smiles.replace_stars("[At]").mol], quiet=True, nproc=1)
         fps = dim.fill_missing().T - mon.fill_missing().T
