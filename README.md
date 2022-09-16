@@ -1,10 +1,10 @@
 # PSMILES - Fun with P🙂 strings
 
-PSMILES (Polymer SMILES or P🙂) strings are string representations of polymer structures (e.g., `[*]CC[*]` for polyethylene). PSMILES are built upon the SMILES chemical language. The `PSMILES` Python package contains tools to manipulate and handle PSMILES strings.
+The `PSMILES` Python package contains tools to work with polymer SMILES (PSMILES) strings.
 
+## PSMILES strings
 
-## PSMILES string
-A PSMILES string has two stars (`[*]` or `*`) symbols that indicate the two endpoints of the polymer repeat unit and otherwise follow the daylight SMILES syntax defined at [OpenSmiles](http://opensmiles.org/opensmiles.html). For ladder polymers, the repeat unit is indicated by `[e]` -> `[t]` and `[d]` -> `[g]`. See [PSMILES guide](https://www.polymergenome.org/guide/) for more details.
+PSMILES (P🙂) strings are string representations of polymer structures (e.g., `[*]CC[*]` for polyethylene). PSMILES are built upon the SMILES chemical language. A PSMILES string has two stars (`[*]` or `*`) symbols that indicate the two endpoints of the polymer repeat unit and otherwise follows the daylight SMILES syntax defined at [OpenSmiles](http://opensmiles.org/opensmiles.html). See [PSMILES guide](https://www.polymergenome.org/guide/) for more details.
 
 Examples:
 
@@ -15,16 +15,15 @@ Examples:
 ## Features, functions, and roadmap
 
 - [x] Canonicalization of PSMILES (via https://github.com/Ramprasad-Group/canonicalize_psmiles)
-- [x] Dimerization of PSMILES
-- [x] Fingerprints (numerical representation)
+- [x] Fingerprints (descriptors or features)
     - [x] polyBERT fingerprints (see arXiv) 
     - [x] Polymer Genome fingerprints (Ramprasad group internal only, not available to the public)
     - [x] Mordred fingerprints [https://github.com/mordred-descriptor/mordred](https://github.com/mordred-descriptor/mordred)
     - [x] Circular (Morgen) fingerprints as implemented in RDKit
     - [x] RDKit fingerprints as implemented in RDKit
-- [x] Fingerprints for ladder polymers only for PG fingerprints
+- [x] Dimerization of PSMILES
 - [x] Randomize PSMILES
-- [x] Polymer similarity based on fingerprints
+- [x] Compute polymer similarity based on the fingerprints
 - [x] Create alternating copolymers from two PSMILES
 
 
@@ -34,17 +33,13 @@ Examples:
 poetry add git+ssh://git@github.com/Ramprasad-Group/psmiles.git
 ```
 
-With polyBERT fingerprints
+With polyBERT and mordred fingerprints
 
 ```bash
-poetry add git+ssh://git@github.com/Ramprasad-Group/psmiles.git --with polyBERT
+poetry add git+ssh://git@github.com/Ramprasad-Group/psmiles.git --with polyBERT,mordred
 ```
 
-With mordred fingerprints
 
-```bash
-poetry add git+ssh://git@github.com/Ramprasad-Group/psmiles.git --with mordred
-```
 
 ## Install for development
 
@@ -54,11 +49,11 @@ poetry add git+ssh://git@github.com/Ramprasad-Group/psmiles.git --with mordred
 git clone git@github.com:Ramprasad-Group/psmiles.git
 cd psmiles
 poetry config virtualenvs.in-project true
-poetry install
+poetry install --with polyBERT,mordred
 ```
 
 ## Usage
 
-[`test.ipynb`](tests/test.ipynb) - shows the general usage of the package
+[`test_book.ipynb`](tests/test_book.ipynb) - shows the general usage of the package
 
 
