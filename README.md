@@ -14,14 +14,14 @@ Examples:
 
 ## Features, functions, and roadmap
 
-- [x] Canonicalization of PSMILES (via https://github.com/Ramprasad-Group/canonicalize_psmiles)
-- [x] Fingerprints (descriptors or features)
-    - [x] polyBERT fingerprints (see arXiv) 
+- [x] Canonicalize PSMILES strings (via https://github.com/Ramprasad-Group/canonicalize_psmiles)
+- [x] Polymer Fingerprints (descriptors or features)
+    - [x] polyBERT fingerprints (see [arXiv](link)) 
     - [x] Polymer Genome fingerprints (Ramprasad group internal only, not available to the public)
     - [x] Mordred fingerprints [https://github.com/mordred-descriptor/mordred](https://github.com/mordred-descriptor/mordred)
     - [x] Circular (Morgen) fingerprints as implemented in RDKit
     - [x] RDKit fingerprints as implemented in RDKit
-- [x] Dimerization of PSMILES
+- [x] Dimerize PSMILES
 - [x] Randomize PSMILES
 - [x] Compute polymer similarity based on the fingerprints
 - [x] Create alternating copolymers from two PSMILES
