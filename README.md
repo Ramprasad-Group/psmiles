@@ -21,10 +21,10 @@ Examples:
     - [x] Mordred fingerprints [https://github.com/mordred-descriptor/mordred](https://github.com/mordred-descriptor/mordred)
     - [x] Circular (Morgen) fingerprints as implemented in RDKit
     - [x] RDKit fingerprints as implemented in RDKit
-- [x] Dimerize PSMILES
-- [x] Randomize PSMILES
+- [x] Dimerize PSMILES strings
+- [x] Randomize PSMILES strings
 - [x] Compute polymer similarity based on the fingerprints
-- [x] Create alternating copolymers from two PSMILES
+- [x] Create alternating copolymers from two PSMILES strings
 
 
 ## Install with poetry 
