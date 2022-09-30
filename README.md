@@ -11,6 +11,8 @@ Examples:
  Polyethylene | Polyethylene oxide | Polypropylene |
 |-|-|-|
 | `[*]CC[*]` | `[*]CCO[*]` | `[*]CC([*])C` | 
+| ![](docs/PE.png) | ![](docs/PEO.png) | ![](docs/PP.png) | 
+
 
 ## Features, functions, and roadmap
 
