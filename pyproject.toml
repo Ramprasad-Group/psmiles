@@ -18,11 +18,9 @@ canonicalize-psmiles = {git = "https://github.com/Ramprasad-Group/canonicalize_p
 
 mordred = {version = "^1.2.0", optional = true}
 sentence-transformers = {version = "^2.2.0", optional = true}
-pgfingerprinting = {git = "ssh://git@github.com/Ramprasad-Group/pgfingerprinting.git", rev = "main", optional = true}
 
 [tool.poetry.extras]
 mordred = ["mordred"]
-pg = ["pgfingerprinting"]
 polyBERT = ["sentence-transformers"]
 
 [tool.poetry.group.dev.dependencies]
