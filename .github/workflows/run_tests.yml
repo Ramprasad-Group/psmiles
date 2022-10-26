@@ -20,7 +20,7 @@ jobs:
         export POETRY_HOME=/opt/poetry
         python3 -m venv $POETRY_HOME
         $POETRY_HOME/bin/pip install poetry==1.2.1
-        $POETRY_HOME/bin/poetry install --without pg,polyBERT --with mordred -v
+        $POETRY_HOME/bin/poetry install -E polyBERT -E mordred
     
     - name: Run tests in tests/ with pytest
       run: |
