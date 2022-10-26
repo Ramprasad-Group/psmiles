@@ -453,7 +453,7 @@ class PolymerSmiles:
         """
         assert importlib.util.find_spec("pgfingerprinting"), (
             "pgfingerprinting python package is not installed. "
-            "Please install with `poetry install --with pg. "
+            "Please install with pgfingerprinting package to use this function."
             "Package not available to the public."
         )
 
