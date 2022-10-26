@@ -1,10 +1,10 @@
-# PSMILES - Fun with P🙂 strings
+# PSMILES - Fun with P🙂s strings
 
-The `PSMILES` Python package contains tools to work with polymer SMILES (PSMILES) strings.
+The `PSMILES` Python package contains tools to work with polymer SMILES (PSMILES or P🙂s) strings.
 
 ## PSMILES strings
 
-PSMILES (P🙂) strings are string representations of polymer structures (e.g., `[*]CC[*]` for polyethylene). PSMILES are built upon the SMILES chemical language. A PSMILES string has two stars (`[*]` or `*`) symbols that indicate the two endpoints of the polymer repeat unit and otherwise follows the daylight SMILES syntax defined at [OpenSmiles](http://opensmiles.org/opensmiles.html). See [PSMILES guide](https://www.polymergenome.org/guide/) for more details.
+PSMILES strings are string representations of polymer structures. A PSMILES string has two star (`[*]` or `*`) symbols that indicate the two endpoints of the polymer repeat unit and otherwise follows the daylight SMILES syntax defined at [OpenSmiles](http://opensmiles.org/opensmiles.html). See [PSMILES guide](https://www.polymergenome.org/guide/) for more details.
 
 Examples:
 
@@ -29,15 +29,22 @@ Examples:
 - [x] Create alternating copolymers from two PSMILES strings
 
 
+## Install with pip
+
+
+```bash
+pip install git+https://github.com/Ramprasad-Group/psmiles.git
+
+# With polyBERT and mordred fingerprints
+poetry install git+https://github.com/Ramprasad-Group/psmiles.git -E polyBERT -E mordred
+```
+
 ## Install with poetry 
 
 ```bash
 poetry add git+https://github.com/Ramprasad-Group/psmiles.git
-```
 
-With polyBERT and mordred fingerprints
-
-```bash
+# With polyBERT and mordred fingerprints
 poetry add git+https://github.com/Ramprasad-Group/psmiles.git -E polyBERT -E mordred
 ```
 
@@ -45,12 +52,10 @@ poetry add git+https://github.com/Ramprasad-Group/psmiles.git -E polyBERT -E mor
 ## Install for development
 
 
-1. Clone project
 ```sh
 git clone https://github.com/Ramprasad-Group/psmiles.git
 cd psmiles
-poetry config virtualenvs.in-project true
-poetry install --with polyBERT,mordred
+poetry install -E polyBERT -E mordred
 ```
 
 ## Usage
