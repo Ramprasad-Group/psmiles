@@ -32,15 +32,14 @@ Examples:
 ## Install with poetry 
 
 ```bash
-poetry add git+ssh://git@github.com/Ramprasad-Group/psmiles.git
+poetry add git+https://github.com/Ramprasad-Group/psmiles.git
 ```
 
 With polyBERT and mordred fingerprints
 
 ```bash
-poetry add git+ssh://git@github.com/Ramprasad-Group/psmiles.git --with polyBERT,mordred
+poetry add git+https://github.com/Ramprasad-Group/psmiles.git -E polyBERT -E mordred
 ```
-
 
 
 ## Install for development
@@ -48,7 +47,7 @@ poetry add git+ssh://git@github.com/Ramprasad-Group/psmiles.git --with polyBERT,
 
 1. Clone project
 ```sh
-git clone git@github.com:Ramprasad-Group/psmiles.git
+git clone https://github.com/Ramprasad-Group/psmiles.git
 cd psmiles
 poetry config virtualenvs.in-project true
 poetry install --with polyBERT,mordred
