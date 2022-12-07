@@ -36,7 +36,7 @@ Examples:
 pip install git+https://github.com/Ramprasad-Group/psmiles.git
 
 # With polyBERT and mordred fingerprints
-poetry install git+https://github.com/Ramprasad-Group/psmiles.git -E polyBERT -E mordred
+pip install git+https://github.com/Ramprasad-Group/psmiles.git -E polyBERT -E mordred
 ```
 
 ## Install with poetry 
