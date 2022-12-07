@@ -83,9 +83,12 @@ class PolymerSmiles:
         return self.psmiles
 
     def _repr_png_(self):
-        print(f"SMILES: {self.__repr__()}")
+        print(f"PSMILES: {self.__repr__()}")
         if not self.ladder:
-            return self.mol._repr_png_()
+            # Highlight stars
+            mol = self.mol
+            setattr(mol, '__sssAtoms', self.get_connection_info()['star']['index'])
+            return mol._repr_png_()
 
     def check_double_bonds_at_connection(self):
         """Check if bonds types (single, double) are the same at the stars."""
@@ -291,7 +294,7 @@ class PolymerSmiles:
         """Dimerize the PSMILES string
         
         Args:
-            how (int): 0 to connect to first start. 1 to connect to second star.
+            how (int): 0 to connect to first star. 1 to connect to second star.
 
         Returns:
             PolymerSmiles: dimerized PSMILES string
@@ -397,7 +400,7 @@ class PolymerSmiles:
             mols, molsPerRow=4, legends=names, subImgSize=(250, 200)
         )
 
-    def fingerprint(self, fp="ci"):
+    def fingerprint(self, fp="ci") -> Union[Dict[str, float], np.ndarray]:
         """Returns fingerprints of the PSMILES string.
 
         Note:
@@ -405,10 +408,10 @@ class PolymerSmiles:
             of the ci, mordred, and RDKit fingerprints.
 
         Args:
-            fp (str, optional): Choose fingerprint from pg, ci, rdkit, or mordred. Defaults to 'ci'.
+            fp (str, optional): Choose fingerprint from pg, ci, rdkit, mordred, polyBERT. Defaults to 'ci'.
 
         Returns:
-            _type_: Fingerprint vector
+            Union[Dict[str, float], np.ndarray]: Fingerprint vector
         """
         if fp == "pg":
             return self.fingerprint_pg
@@ -434,8 +437,11 @@ class PolymerSmiles:
             np.ndarray: polyBERT fingerprints
         """
         assert importlib.util.find_spec("sentence_transformers"), (
-            "sentence-transformers python package is not installed. "
-            "Please install with `poetry install --with polyBERT."
+            "PolyBERT fingerprints require the `sentence-transformers` Python package. "
+            "Please install with pip "
+            "`pip install git+https://github.com/Ramprasad-Group/psmiles.git -E polyBERT` "
+            "Or, with poetry "
+            "`poetry add git+https://github.com/Ramprasad-Group/psmiles.git -E polyBERT` "
         )
 
         from sentence_transformers import SentenceTransformer
@@ -471,9 +477,13 @@ class PolymerSmiles:
         Returns:
             Dict[str, float]: mordred fingerprints
         """
-        assert importlib.util.find_spec(
-            "mordred"
-        ), "Mordred is not installed. Please install with `poetry install --with mordred`"
+        assert importlib.util.find_spec("mordred"), (
+            "Mordred fingerprints require the `mordred` Python package. "
+            "Please install with pip "
+            "`pip install git+https://github.com/Ramprasad-Group/psmiles.git -E mordred` "
+            "Or, with poetry "
+            "`poetry add git+https://github.com/Ramprasad-Group/psmiles.git -E mordred` "
+        )
         from mordred import Calculator, descriptors
 
         calc = Calculator(descriptors, ignore_3D=True)
