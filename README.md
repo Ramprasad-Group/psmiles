@@ -2,6 +2,8 @@
 
 The `psmiles` Python package contains tools to work with polymer SMILES (PSMILES or P🙂s) strings. PSMILES strings are a chemical language to represent polymers.
 
+⏩ See the [Documentation](https://psmiles.readthedocs.io/)
+
 ## PSMILES strings
 
 PSMILES strings are string representations of polymer structures. A PSMILES string has two star (`[*]` or `*`) symbols that indicate the two endpoints of the polymer repeat unit and otherwise follows the daylight SMILES syntax defined at [OpenSmiles](http://opensmiles.org/opensmiles.html). See [PSMILES guide](https://www.polymergenome.org/guide/) for more details.
@@ -14,26 +16,25 @@ Examples:
 | ![](docs/PE.png) | ![](docs/PEO.png) | ![](docs/PP.png) | 
 
 
-## How to use the `psmiles` Python package
+## How to use `psmiles`
 
 
-Create a `PolymerSmiles` object of your PSMILES string. The `ps` object has functions to compute properties or manipulate the PSMILES string. For example, canonicalize a PSMILES string with
+Create an object of the class `PolymerSmiles` for your PSMILES string. The object has functions to compute properties or manipulate the PSMILES string. For example, canonicalize a PSMILES string with
 
 ```python
 from psmiles import PolymerSmiles as PS
-ps = PS('[*]CC(c1ccccc1)[*]' )
+ps = PS('C(c1ccccc1)(C[*])[*]')
 ps.canonicalize
 ```
 
-All functions are documented in the API Documentation of this package. Also, check out [`test_book.ipynb`](tests/test_book.ipynb) for examples.
+See the [Documentation](https://psmiles.readthedocs.io/) for more. Also, check out [`test_book.ipynb`](https://github.com/Ramprasad-Group/psmiles/blob/main/tests/test_book.ipynb) for examples.
 
 
 ## Features, functions, and roadmap
 
-- [x] Canonicalize PSMILES strings (via https://github.com/Ramprasad-Group/canonicalize_psmiles)
+- [x] Canonicalize PSMILES strings (via the [canonicalize_psmiles](https://github.com/Ramprasad-Group/canonicalize_psmiles) package)
 - [x] Polymer fingerprints (descriptors or features)
     - [x] polyBERT fingerprints (see [polyBERT](https://github.com/Ramprasad-Group/polyBERT) and [arXiv](https://arxiv.org/abs/2209.14803)) 
-    - [x] Polymer Genome fingerprints (Ramprasad group internal only, not available to the public)
     - [x] [Mordred](https://github.com/mordred-descriptor/mordred) fingerprints
     - [x] Circular (Morgen) fingerprints as implemented in RDKit
     - [x] RDKit fingerprints as implemented in RDKit
@@ -61,7 +62,6 @@ poetry add git+https://github.com/Ramprasad-Group/psmiles.git
 # With polyBERT and mordred fingerprints
 poetry add git+https://github.com/Ramprasad-Group/psmiles.git -E polyBERT -E mordred
 ```
-
 
 
 ## Install for development
