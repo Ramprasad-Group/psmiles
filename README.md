@@ -1,6 +1,6 @@
 # PSMILES - Fun with P🙂s strings
 
-The `PSMILES` Python package contains tools to work with polymer SMILES (PSMILES or P🙂s) strings.
+The `psmiles` Python package contains tools to work with polymer SMILES (PSMILES or P🙂s) strings. PSMILES strings are a chemical language to represent polymers.
 
 ## PSMILES strings
 
@@ -12,6 +12,20 @@ Examples:
 |-|-|-|
 | `[*]CC[*]` | `[*]CCO[*]` | `[*]CC([*])C` | 
 | ![](docs/PE.png) | ![](docs/PEO.png) | ![](docs/PP.png) | 
+
+
+## How to use the `psmiles` Python package
+
+
+Create a `PolymerSmiles` object of your PSMILES string. The `ps` object has functions to compute properties or manipulate the PSMILES string. For example, canonicalize a PSMILES string with
+
+```python
+from psmiles import PolymerSmiles as PS
+ps = PS('[*]CC(c1ccccc1)[*]' )
+ps.canonicalize
+```
+
+All functions are documented in the API Documentation of this package. Also, check out [`test_book.ipynb`](tests/test_book.ipynb) for examples.
 
 
 ## Features, functions, and roadmap
@@ -49,6 +63,7 @@ poetry add git+https://github.com/Ramprasad-Group/psmiles.git -E polyBERT -E mor
 ```
 
 
+
 ## Install for development
 
 
@@ -57,9 +72,5 @@ git clone https://github.com/Ramprasad-Group/psmiles.git
 cd psmiles
 poetry install -E polyBERT -E mordred
 ```
-
-## Usage
-
-[`test_book.ipynb`](tests/test_book.ipynb) - shows the general usage of the package
 
 
