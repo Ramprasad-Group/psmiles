@@ -12,6 +12,4 @@ python:
   - path: .
     extra_requirements:
     - rtd
-    - docs
-    - readthedocs-custom-steps
-  
+    - docs  

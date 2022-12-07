@@ -22,11 +22,13 @@ pydoc-markdown = {version = "^4.6.4", optional = true}
 novella = {version = "^0.2.3", optional = true}
 mkdocs = {version = "^1.4.2", optional = true}
 mkdocs-material = {version = "^8.5.11", optional = true}
+readthedocs-custom-steps = {version = "^0.6.2", optional = true}
 
 [tool.poetry.extras]
 mordred = ["mordred"]
 polyBERT = ["sentence-transformers"]
 docs = ["pydoc-markdown", "novella", "mkdocs", "mkdocs-material"]
+rtd = ["readthedocs-custom-steps"]
 
 [tool.poetry.group.dev.dependencies]
 black = {version = "^22.8.0", allow-prereleases = true}
