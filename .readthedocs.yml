@@ -13,4 +13,5 @@ python:
     extra_requirements:
     - rtd
     - docs
+    - readthedocs-custom-steps
   
