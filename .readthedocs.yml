@@ -5,12 +5,11 @@ build:
   tools:
     python: "3.9"
 
-mkdocs:
-  configuration: "docs/mkdocs.yml"
+mkdocs: {}
 
 python:
   install:
-  - path: .
+  - path: docs
     extra_requirements:
     - rtd
   
