@@ -43,5 +43,5 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.readthedocs-custom-steps]
 script = """
-novella --site-dir _readthedocs/html/ -d docs
+novella --site-dir _build/html -d docs
 """
