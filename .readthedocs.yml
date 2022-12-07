@@ -9,7 +9,8 @@ mkdocs: {}
 
 python:
   install:
-  - path: docs
+  - path: .
     extra_requirements:
     - rtd
+    - docs
   
