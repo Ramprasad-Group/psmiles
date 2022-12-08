@@ -42,6 +42,7 @@ See the [Documentation](https://psmiles.readthedocs.io/) for more. Also, check o
 - [x] Randomize PSMILES strings
 - [x] Compute polymer similarity based on the fingerprints
 - [x] Create alternating copolymers from two PSMILES strings
+- [x] Save the chemical drawing of the polymer to disk
 
 
 ## Install with pip
