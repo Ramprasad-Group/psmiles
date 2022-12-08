@@ -600,3 +600,49 @@ class PolymerSmiles:
             sm = sm.replace(pat, "")
 
         return PolymerSmiles(sm)
+
+    def savefig(self, filename: str = None, crop=True):
+        """Save the chemical drawing of the polymer
+
+        Args:
+            filename (str, optional): Filename to save the drawing. Defaults to PSMILES string.
+            crop (bool, optional): If inkscape is available crop the figure. Defaults to True.
+        """
+        import shutil
+        from pathlib import Path
+        import tempfile
+        import subprocess
+        from rdkit.Chem.Draw import rdMolDraw2D
+
+        if not filename:
+            filename = f"{self.__str__()}.svg"
+        
+        def crop(svg):
+            # crop using inkscape
+            with tempfile.NamedTemporaryFile(suffix='.svg') as fp:
+                fn = Path(fp.name)
+                fn.write_text(svg)
+                subprocess.run(
+                    f"inkscape --export-area-drawing --export-type=svg --export-overwrite {fn}".split(),
+                    stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL
+                )
+                return fn.read_text()
+
+        d2d = rdMolDraw2D.MolDraw2DSVG(300,300)
+        o = d2d.drawOptions()
+        o.clearBackground = False
+
+        d2d.DrawMolecule(self.mol, highlightAtoms=self.get_connection_info()['star']['index'])
+
+        d2d.FinishDrawing()
+        svg = d2d.GetDrawingText()
+        
+        # If inkscape is available use it to crop the figure
+        if shutil.which('inkscape') and crop:
+            svg = crop(svg)
+        
+        # Write
+        Path(filename).write_text(svg)
+
+        logging.debug(f"Drawing saved to {filename}")
+
