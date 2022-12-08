@@ -100,10 +100,10 @@ resolved_reference = "d96f57e13ec23f71d5bbf21faa9b00e46e5cda39"
 
 [[package]]
 name = "certifi"
-version = "2022.9.24"
+version = "2022.12.7"
 description = "Python package for providing Mozilla's CA Bundle."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [[package]]
@@ -1059,6 +1059,21 @@ numpy = "*"
 Pillow = "*"
 
 [[package]]
+name = "readthedocs-custom-steps"
+version = "0.6.2"
+description = "A hack to run custom steps when building documentation on Read the Docs."
+category = "main"
+optional = true
+python-versions = ">=3.5.0,<4.0.0"
+
+[package.dependencies]
+PyYAML = ">=5.0.0"
+tomli = ">=1.2.3"
+
+[package.extras]
+test = ["docker (>=5.0.0,<6.0.0)", "six", "types-PyYAML"]
+
+[[package]]
 name = "regex"
 version = "2022.10.31"
 description = "Alternative regular expression module, to replace re."
@@ -1456,11 +1471,12 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 docs = ["pydoc-markdown", "novella", "mkdocs", "mkdocs-material"]
 mordred = ["mordred"]
 polybert = ["sentence-transformers"]
+rtd = ["readthedocs-custom-steps"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<4.0"
-content-hash = "9f3f27339cc1d031e45c285ec2e8358467b1c74e042a10d40294e61bd4abfe7a"
+content-hash = "bcef3e87ae5568ac10742b7539e4772d9f0265695041f2c2c817380c11af8119"
 
 [metadata.files]
 appnope = [
@@ -1511,8 +1527,8 @@ black = [
 ]
 canonicalize-psmiles = []
 certifi = [
-    {file = "certifi-2022.9.24-py3-none-any.whl", hash = "sha256:90c1a32f1d68f940488354e36370f6cca89f0f106db09518524c88d6ed83f382"},
-    {file = "certifi-2022.9.24.tar.gz", hash = "sha256:0d9c601124e5a6ba9712dbc60d9c53c21e34f5f641fe83002317394311bdce14"},
+    {file = "certifi-2022.12.7-py3-none-any.whl", hash = "sha256:4ad3232f5e926d6718ec31cfc1fcadfde020920e278684144551c91769c7bc18"},
+    {file = "certifi-2022.12.7.tar.gz", hash = "sha256:35824b4c3a97115964b408844d64aa14db1cc518f6562e8d7261699d1350a9e3"},
 ]
 cffi = [
     {file = "cffi-1.15.1-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:a66d3508133af6e8548451b25058d5812812ec3798c886bf38ed24a98216fab2"},
@@ -2183,6 +2199,9 @@ rdkit = [
     {file = "rdkit-2022.9.2-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:2073625472204c17c35eb8f69c34a91070e0b9257fe63f9e8d4b083ede1ed74c"},
     {file = "rdkit-2022.9.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:963aba9a47ed785fb43d9caf4da5092b4ba544ec2ec655cf16d2af0c8dffb453"},
     {file = "rdkit-2022.9.2-cp39-cp39-win_amd64.whl", hash = "sha256:31a5221cedc3efec6af34d394a6231b415bfebad64b216cbd76e4adf8d116bce"},
+]
+readthedocs-custom-steps = [
+    {file = "readthedocs-custom-steps-0.6.2.tar.gz", hash = "sha256:7fbd57fa1faa533da7f3b3f504f9f11a58515e513b5480481dad59401b22ea4e"},
 ]
 regex = [
     {file = "regex-2022.10.31-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:a8ff454ef0bb061e37df03557afda9d785c905dab15584860f982e88be73015f"},
