@@ -94,7 +94,7 @@ def test_dimer_stereo_chemistry_cis():
 
 
 def test_dimer_stereo_chemistry_trans():
-    sms = ["[*]/C=C(/[*])C(C)(C)", "[*]\C=C(\[*])C(C)(C)"]
+    sms = ["[*]/C=C(/[*])C(C)(C)", r"[*]\C=C(\[*])C(C)(C)"]
     dimerized = []
     for s in sms:
         dimerized.append(PS(s).canonicalize.dimer().psmiles)

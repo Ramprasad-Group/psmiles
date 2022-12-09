@@ -1,4 +1,4 @@
-# Welcome to the PSMILES (P🙂s) project 
+# Welcome to the PSMILES (P🙂s) project
 
 
 

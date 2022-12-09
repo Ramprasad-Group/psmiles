@@ -1,25 +1,25 @@
 from __future__ import annotations
 
-import importlib
 import logging
 import pprint
 import re
-import sys
+from importlib import util
 from typing import Dict, List, Union
 
 import numpy as np
 import pandas as pd
+from canonicalize_psmiles.canonicalize import canonicalize as ext_canonicalize
 from rdkit import Chem
 from rdkit.Chem import rdFingerprintGenerator
 from rdkit.Chem.inchi import MolToInchi, MolToInchiKey
 from sklearn.metrics.pairwise import cosine_similarity
-from psmiles.helper import copy_doc
-from canonicalize_psmiles.canonicalize import canonicalize as ext_canonicalize
+
+from psmiles.helper import in_ipynb
 
 
 class PolymerSmiles:
     def __init__(self, psmiles: str, deactivate_warnings: bool = False):
-        """
+        r"""
         PolymerSmiles - Fun with PSMILES strings.
 
         PSMILES strings have two \* or [\*] that indicate the polymer repeat unit.
@@ -87,7 +87,7 @@ class PolymerSmiles:
         if not self.ladder:
             # Highlight stars
             mol = self.mol
-            setattr(mol, '__sssAtoms', self.get_connection_info()['star']['index'])
+            setattr(mol, "__sssAtoms", self.get_connection_info()["star"]["index"])
             return mol._repr_png_()
 
     def check_double_bonds_at_connection(self):
@@ -103,7 +103,7 @@ class PolymerSmiles:
                 f"Bond types: {info['neighbor']['bond_type'][0]} - {info['neighbor']['bond_type'][1]}"
             )
 
-    def get_connection_info(self, mol: Chem.RWMol = None, symbol="*") -> Dict:
+    def get_connection_info(self, mol: Chem.RWMol = None, symbol: str = "*") -> Dict:
         """Get connection information of stars and neighbors.
 
         If mol not specified, use self.mol.
@@ -132,14 +132,14 @@ class PolymerSmiles:
         if stars_bond:
             stars_bond = stars_bond.GetBondType()
 
-        ret_dict["symbols"] = all_symbols
-        ret_dict["index"] = all_index
-
         ret_dict["star"] = {
             "index": stars_indices,
             "atom_type": stars_type,
             "bond_type": stars_bond,
         }
+
+        ret_dict["symbols"] = all_symbols  # type: ignore
+        ret_dict["index"] = all_index  # type: ignore
 
         # multiple neighbors are possible
         neighbor_indices = [
@@ -192,7 +192,7 @@ class PolymerSmiles:
                     }
                 )
 
-        ret_dict["stereo"] = stereo_info
+        ret_dict["stereo"] = stereo_info  # type: ignore
 
         # Ring info
         ring_info = mol.GetRingInfo()
@@ -229,7 +229,10 @@ class PolymerSmiles:
 
     def nb_display(self, mol):
         print(f"SMILES: {Chem.MolToCXSmiles(mol)}")
-        display(mol)
+        if in_ipynb():
+            from IPython.display import display
+
+            display(mol)
 
     @property
     def periodic(self) -> PolymerSmiles:
@@ -265,7 +268,7 @@ class PolymerSmiles:
 
     @property
     def inchi(self) -> str:
-        """Compute the InChI string of the PSMILES.
+        r"""Compute the InChI string of the PSMILES.
 
         Note:
             [\*] is replaced with [At] to use RDKit's MolToInchi method
@@ -274,25 +277,28 @@ class PolymerSmiles:
         Returns:
             str: InChI string
         """
-        return MolToInchi(Chem.MolFromSmiles(self.canonicalize.psmiles.replace("[*]", "[At]")))
+        return MolToInchi(
+            Chem.MolFromSmiles(self.canonicalize.psmiles.replace("[*]", "[At]"))
+        )
 
     @property
     def inchi_key(self) -> str:
-        """Compute the InChI key of the SMILES.
+        r"""Compute the InChI key of the SMILES.
 
-        Note: 
+        Note:
             [\*] is replaced with [At] to use RDKit's MolToInchiKey method
             PSMILES string is canonicalized
 
         Returns:
             str: InChI key
         """
-        return MolToInchiKey(Chem.MolFromSmiles(self.canonicalize.psmiles.replace("[*]", "[At]")))
+        return MolToInchiKey(
+            Chem.MolFromSmiles(self.canonicalize.psmiles.replace("[*]", "[At]"))
+        )
 
-    
     def dimer(self, how: int = 0) -> PolymerSmiles:
         """Dimerize the PSMILES string
-        
+
         Args:
             how (int): 0 to connect to first star. 1 to connect to second star.
 
@@ -312,7 +318,7 @@ class PolymerSmiles:
             self.nb_display(mol)
 
         # combine two mols
-        logging.debug(f"(2) Combine two mols")
+        logging.debug("(2) Combine two mols")
 
         mol_combined = Chem.RWMol(Chem.CombineMols(mol, mol))
         if logging.DEBUG >= logging.root.level:
@@ -325,9 +331,9 @@ class PolymerSmiles:
 
         # Two connection possibilities, how can be 0 or 1
         connect = [
-                info["star"]["index"][0],
-                info["star"]["index"][how] + len(info["symbols"]),
-            ]
+            info["star"]["index"][0],
+            info["star"]["index"][how] + len(info["symbols"]),
+        ]
 
         logging.debug(
             f"(3) Connect star atoms {connect[0]} and {connect[1]} with {bond_type = }"
@@ -345,7 +351,7 @@ class PolymerSmiles:
             "\\\\": "\\",  # if * have stereochemistry
             "==": "=",  # if * has double bonds
             "##": "#",  # if * has triple bonds
-            "\/": "\\",  # if \ or / at * (at the double bond)
+            r"\/": "\\",  # if \ or / at * (at the double bond)
         }
         logging.debug(f"(4) Remove {patterns} pattern {sm}")
         for p, r in patterns.items():
@@ -436,7 +442,7 @@ class PolymerSmiles:
         Returns:
             np.ndarray: polyBERT fingerprints
         """
-        assert importlib.util.find_spec("sentence_transformers"), (
+        assert util.find_spec("sentence_transformers"), (
             "PolyBERT fingerprints require the `sentence-transformers` Python package. "
             "Please install with pip "
             "`pip install git+https://github.com/Ramprasad-Group/psmiles.git -E polyBERT` "
@@ -457,7 +463,7 @@ class PolymerSmiles:
         Returns:
             Dict[str, float]: PG fingerprints
         """
-        assert importlib.util.find_spec("pgfingerprinting"), (
+        assert util.find_spec("pgfingerprinting"), (
             "pgfingerprinting python package is not installed. "
             "Please install with pgfingerprinting package to use this function."
             "Package not available to the public."
@@ -477,7 +483,7 @@ class PolymerSmiles:
         Returns:
             Dict[str, float]: mordred fingerprints
         """
-        assert importlib.util.find_spec("mordred"), (
+        assert util.find_spec("mordred"), (
             "Mordred fingerprints require the `mordred` Python package. "
             "Please install with pip "
             "`pip install git+https://github.com/Ramprasad-Group/psmiles.git -E mordred` "
@@ -575,7 +581,7 @@ class PolymerSmiles:
 
         # combine two mols
         ed = Chem.RWMol(Chem.CombineMols(self.mol, other.mol))
-        logging.debug(f"(1) Combine both PSMILES")
+        logging.debug("(1) Combine both PSMILES")
         if logging.DEBUG >= logging.root.level:
             self.nb_display(ed)
 
@@ -609,40 +615,43 @@ class PolymerSmiles:
             crop (bool, optional): If inkscape is available crop the figure. Defaults to True.
         """
         import shutil
-        from pathlib import Path
-        import tempfile
         import subprocess
+        import tempfile
+        from pathlib import Path
+
         from rdkit.Chem.Draw import rdMolDraw2D
 
         if not filename:
             filename = f"{self.__str__()}.svg"
-        
-        def crop(svg):
+
+        def crop_svg(svg):
             # crop using inkscape
-            with tempfile.NamedTemporaryFile(suffix='.svg') as fp:
+            with tempfile.NamedTemporaryFile(suffix=".svg") as fp:
                 fn = Path(fp.name)
                 fn.write_text(svg)
                 subprocess.run(
                     f"inkscape --export-area-drawing --export-type=svg --export-overwrite {fn}".split(),
-                    stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL
+                    stderr=subprocess.DEVNULL,
+                    stdout=subprocess.DEVNULL,
                 )
                 return fn.read_text()
 
-        d2d = rdMolDraw2D.MolDraw2DSVG(300,300)
+        d2d = rdMolDraw2D.MolDraw2DSVG(300, 300)
         o = d2d.drawOptions()
         o.clearBackground = False
 
-        d2d.DrawMolecule(self.mol, highlightAtoms=self.get_connection_info()['star']['index'])
+        d2d.DrawMolecule(
+            self.mol, highlightAtoms=self.get_connection_info()["star"]["index"]
+        )
 
         d2d.FinishDrawing()
         svg = d2d.GetDrawingText()
-        
+
         # If inkscape is available use it to crop the figure
-        if shutil.which('inkscape') and crop:
-            svg = crop(svg)
-        
+        if shutil.which("inkscape") and crop:
+            svg = crop_svg(svg)
+
         # Write
         Path(filename).write_text(svg)
 
         logging.debug(f"Drawing saved to {filename}")
-

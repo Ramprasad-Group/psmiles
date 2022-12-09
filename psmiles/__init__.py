@@ -1,1 +1,1 @@
-from .psmiles import PolymerSmiles
+from .psmiles import PolymerSmiles  # noqa: F401

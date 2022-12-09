@@ -22,7 +22,7 @@ def test_canonicalize_one():
     one_smiles = list(set(canonicalize_smiles))
 
     # assert one_smiles == ["[*]=CNc1ccc(N=[*])cc1"]
-    assert one_smiles == ['[*]NC=Nc1ccc([*])cc1']
+    assert one_smiles == ["[*]NC=Nc1ccc([*])cc1"]
 
 
 def test_canonicalize_two():
@@ -154,7 +154,7 @@ def test_canonicalize_seven():
         canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     one_smiles = list(set(canonicalize_smiles))
 
-    assert one_smiles == ["[*]/C=C(\[*])C(C)(C)C"]
+    assert one_smiles == [r"[*]/C=C(\[*])C(C)(C)C"]
 
 
 def test_canonicalize_polystyrene():
@@ -246,14 +246,14 @@ def test_canonicalize_tricky():
 def test_canonicalize_connected_neighbors():
     """Test canonicalization of SMILES strings that already have connected neighbors."""
 
-    sm_init = ["[*]/C=C(\[*])C(C)(C)C", "[*]\C=C(/[*])C(C)(C)C"]
+    sm_init = [r"[*]/C=C(\[*])C(C)(C)C", r"[*]\C=C(/[*])C(C)(C)C"]
 
     canonicalize_smiles = []
     for s in sm_init:
         canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     one_smiles = list(set(canonicalize_smiles))
 
-    assert one_smiles == ["[*]/C=C(\[*])C(C)(C)C"]
+    assert one_smiles == [r"[*]/C=C(\[*])C(C)(C)C"]
 
 
 def test_canonicalize_same_neighbors():
@@ -280,7 +280,7 @@ def test_canonicalize_same_neighbors():
     assert one_smiles == ["[*]C([*])(F)F"]
 
 
-def test_canonicalize_tricky():
+def test_canonicalize_tricky_2():
     """That's a tricky one. All atoms are aromatic."""
 
     sm_init = [
@@ -337,7 +337,8 @@ def test_canonicalize_break_aromatic():
     for s in sm_init:
         canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     one_smiles = list(set(canonicalize_smiles))
-    assert one_smiles == ['[*]C=Cc1sc([*])c(OCCCC)c1OCCCC']
+    assert one_smiles == ["[*]C=Cc1sc([*])c(OCCCC)c1OCCCC"]
+
 
 def test_canonicalize_multiple():
     sm_init = [
@@ -349,5 +350,4 @@ def test_canonicalize_multiple():
     for s in sm_init:
         canonicalize_smiles.append(PS(s).canonicalize.psmiles)
     one_smiles = list(set(canonicalize_smiles))
-    assert one_smiles == ['[*]c1sc(-c2sc(-c3sc([*])c4nccnc34)c3c2OCCO3)c2c1OCCO2']
-
+    assert one_smiles == ["[*]c1sc(-c2sc(-c3sc([*])c4nccnc34)c3c2OCCO3)c2c1OCCO2"]
