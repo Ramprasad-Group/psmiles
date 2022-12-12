@@ -11,5 +11,4 @@ python:
   install:
   - path: .
     extra_requirements:
-    - rtd
     - docs
