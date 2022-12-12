@@ -1,0 +1,53 @@
+site_name: PSMILES
+repo_url: https://github.com/Ramprasad-Group/psmiles
+repo_name: Ramprasad-Group/psmiles
+site_author: Christopher Kuenneth
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+  font:
+    text: Open Sans
+  palette:
+    - scheme: slate
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+
+markdown_extensions:
+  - attr_list
+  - codehilite
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+
+
+# recursive_relative_path: true
+plugins:
+  - search
+  - autorefs
+  - mkdocstrings:
+      default_handler: python
+
+
+nav:
+  - Fun with P🙂s strings: index.md
+  - Install: install.md
+  - Usage: usage.md
+  - Reference:
+    - PSMILES: api_psmiles.md
+    - Canonicalization: api_can.md
