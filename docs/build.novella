@@ -1,6 +1,0 @@
-template "mkdocs"
-
-
-action "preprocess-markdown" {
-  use "pydoc"
-}

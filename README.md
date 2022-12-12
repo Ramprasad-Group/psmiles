@@ -1,6 +1,6 @@
 # PSMILES - Fun with P🙂s strings
 
-The `psmiles` Python package contains tools to work with polymer SMILES (PSMILES or P🙂s) strings. PSMILES strings are a chemical language to represent polymers.
+The `psmiles` Python package provides tools and functions to work with polymer SMILES (PSMILES or P🙂s) strings. PSMILES strings are a chemical language to represent polymers.
 
 ⏩ See the [Documentation](https://psmiles.readthedocs.io/)
 
@@ -53,7 +53,7 @@ See the [Documentation](https://psmiles.readthedocs.io/) for more. Also, check o
 pip install git+https://github.com/Ramprasad-Group/psmiles.git
 
 # With polyBERT and mordred fingerprints
-pip install git+https://github.com/Ramprasad-Group/psmiles.git -E polyBERT -E mordred
+pip install 'psmiles[polyBERT,mordred]@git+https://github.com/Ramprasad-Group/psmiles.git'
 ```
 
 ## Install with poetry

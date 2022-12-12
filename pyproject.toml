@@ -18,16 +18,17 @@ canonicalize-psmiles = {git = "https://github.com/Ramprasad-Group/canonicalize_p
 
 mordred = {version = "^1.2.0", optional = true}
 sentence-transformers = {version = "^2.2.0", optional = true}
-pydoc-markdown = {version = "^4.6.4", optional = true}
-novella = {version = "^0.2.3", optional = true}
 mkdocs = {version = "^1.4.2", optional = true}
 mkdocs-material = {version = "^8.5.11", optional = true}
+mkdocstrings = {extras = ["python"], version = "^0.19.0"}
 readthedocs-custom-steps = {version = "^0.6.2", optional = true}
+mkdocstrings-python = {version = "^0.8.2", optional = true}
+
 
 [tool.poetry.extras]
 mordred = ["mordred"]
 polyBERT = ["sentence-transformers"]
-docs = ["pydoc-markdown", "novella", "mkdocs", "mkdocs-material"]
+docs = ["mkdocstrings", "mkdocs", "mkdocs-material", "mkdocstrings-python"]
 rtd = ["readthedocs-custom-steps"]
 
 [tool.poetry.group.dev.dependencies]
