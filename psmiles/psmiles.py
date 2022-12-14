@@ -554,7 +554,7 @@ class PolymerSmiles:
 
     def alternating_copolymer(
         self, other: Union[PolymerSmiles, str], how: List[int] = [0, 1]
-    ):
+    ) -> PolymerSmiles:
         """Creates alternating copolymer from two PSMILES strings.
 
         Note:
