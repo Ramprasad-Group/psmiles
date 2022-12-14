@@ -76,17 +76,17 @@ class PolymerSmiles:
             )
 
     def __repr__(self) -> str:
-        st = f"{self.psmiles}"
-        return st
+        return f"PolymerSmiles({self.psmiles})"
 
     def __str__(self) -> str:
         return self.psmiles
 
     def _repr_png_(self):
-        print(f"PSMILES: {self.__repr__()}")
-        if not self.ladder:
+        print(f"PSMILES: {self.__str__()}")
+        mol = self.mol
+
+        if not self.ladder and hasattr(mol, "_repr_png_"):
             # Highlight stars
-            mol = self.mol
             setattr(mol, "__sssAtoms", self.get_connection_info()["star"]["index"])
             return mol._repr_png_()
 
