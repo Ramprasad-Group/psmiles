@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "psmiles"
-version = "0.6.7"
+version = "0.6.8"
 description = "A Python package for working with PSMILES (polymer SMILES) strings."
 authors = ["Christopher Kuenneth <christopher.kuenneth@gmail.com>"]
 license = "MIT"
