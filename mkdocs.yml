@@ -49,5 +49,5 @@ nav:
   - Install: install.md
   - Usage: usage.md
   - Reference:
-    - PSMILES: api_psmiles.md
-    - Canonicalization: api_can.md
+    - PSMILES: api/psmiles.md
+    - Canonicalization: api/canonicalize.md

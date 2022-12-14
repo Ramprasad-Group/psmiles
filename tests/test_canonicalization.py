@@ -133,7 +133,8 @@ def test_canonicalize_six():
 def test_canonicalize_seven():
     """Test canonicalization of one SMILES."""
 
-    # We cannot form a ring in this case because the star neighbors are already connected. (polystyrene)
+    # We cannot form a ring in this case because the
+    # star neighbors are already connected. (polystyrene)
     # Just running RDKits canonicalization does the job though.
 
     sm_init = [
@@ -257,7 +258,8 @@ def test_canonicalize_connected_neighbors():
 
 
 def test_canonicalize_same_neighbors():
-    """Test canonicalization of SMILES strings that star neighbors is are the same atom"""
+    """Test canonicalization of SMILES strings
+    that star neighbors is are the same atom"""
 
     sm_init = [
         "[*]C(F)([*])F",
@@ -284,17 +286,17 @@ def test_canonicalize_tricky_2():
     """That's a tricky one. All atoms are aromatic."""
 
     sm_init = [
-        "[*]c1ccc(-c2ccc(N3C(=O)c4cc5c(cc4C3=O)C(C(F)(F)F)(C(F)(F)F)c3cc4c(cc3O5)C(=O)N([*])C4=O)cc2C(F)(F)F)c(C(F)(F)F)c1",
-        "c1(C(F)(F)F)c(-c2c(C(F)(F)F)cc(cc2)N2C(=O)c3c(cc4Oc5c(C(C(F)(F)F)(c4c3)C(F)(F)F)cc3C(N(C(=O)c3c5)[*])=O)C2=O)ccc(c1)[*]",
-        "C(F)(c1cc(ccc1-c1c(cc(N2C(c3cc4c(Oc5c(cc6C(=O)N(C(=O)c6c5)[*])C4(C(F)(F)F)C(F)(F)F)cc3C2=O)=O)cc1)C(F)(F)F)[*])(F)F",
-        "O=C1c2c(C(=O)N1[*])cc1c(Oc3c(cc4C(=O)N(c5cc(c(-c6c(cc(cc6)[*])C(F)(F)F)cc5)C(F)(F)F)C(c4c3)=O)C1(C(F)(F)F)C(F)(F)F)c2",
-        "C1(N(c2cc(c(cc2)-c2c(C(F)(F)F)cc([*])cc2)C(F)(F)F)C(=O)c2c1cc1c(c2)C(c2cc3C(N(C(c3cc2O1)=O)[*])=O)(C(F)(F)F)C(F)(F)F)=O",
-        "FC(C1(c2cc3C(N(c4ccc(-c5c(C(F)(F)F)cc([*])cc5)c(c4)C(F)(F)F)C(=O)c3cc2Oc2cc3C(=O)N([*])C(c3cc21)=O)=O)C(F)(F)F)(F)F",
-        "c1cc([*])cc(c1-c1ccc(N2C(=O)c3cc4c(C(c5c(cc6c(c5)C(=O)N([*])C6=O)O4)(C(F)(F)F)C(F)(F)F)cc3C2=O)cc1C(F)(F)F)C(F)(F)F",
-        "FC(c1c(ccc(c1)N1C(=O)c2cc3Oc4c(cc5C(N(C(c5c4)=O)[*])=O)C(C(F)(F)F)(C(F)(F)F)c3cc2C1=O)-c1c(cc(cc1)[*])C(F)(F)F)(F)F",
-        "FC(F)(F)c1c(-c2ccc(cc2C(F)(F)F)N2C(=O)c3c(cc4Oc5cc6C(N(C(=O)c6cc5C(C(F)(F)F)(c4c3)C(F)(F)F)[*])=O)C2=O)ccc(c1)[*]",
-        "FC(c1cc(N2C(=O)c3cc4c(cc3C2=O)Oc2c(C4(C(F)(F)F)C(F)(F)F)cc3C(=O)N([*])C(=O)c3c2)ccc1-c1ccc(cc1C(F)(F)F)[*])(F)F",
-        "C(C1(c2c(Oc3c1cc1C(=O)N(C(=O)c1c3)c1ccc(-c3ccc([*])cc3C(F)(F)F)c(C(F)(F)F)c1)cc1c(c2)C(=O)N([*])C1=O)C(F)(F)F)(F)(F)F",
+        "[*]c1ccc(-c2ccc(N3C(=O)c4cc5c(cc4C3=O)C(C(F)(F)F)(C(F)(F)F)c3cc4c(cc3O5)C(=O)N([*])C4=O)cc2C(F)(F)F)c(C(F)(F)F)c1",  # noqa: E501
+        "c1(C(F)(F)F)c(-c2c(C(F)(F)F)cc(cc2)N2C(=O)c3c(cc4Oc5c(C(C(F)(F)F)(c4c3)C(F)(F)F)cc3C(N(C(=O)c3c5)[*])=O)C2=O)ccc(c1)[*]",  # noqa: E501
+        "C(F)(c1cc(ccc1-c1c(cc(N2C(c3cc4c(Oc5c(cc6C(=O)N(C(=O)c6c5)[*])C4(C(F)(F)F)C(F)(F)F)cc3C2=O)=O)cc1)C(F)(F)F)[*])(F)F",  # noqa: E501
+        "O=C1c2c(C(=O)N1[*])cc1c(Oc3c(cc4C(=O)N(c5cc(c(-c6c(cc(cc6)[*])C(F)(F)F)cc5)C(F)(F)F)C(c4c3)=O)C1(C(F)(F)F)C(F)(F)F)c2",  # noqa: E501
+        "C1(N(c2cc(c(cc2)-c2c(C(F)(F)F)cc([*])cc2)C(F)(F)F)C(=O)c2c1cc1c(c2)C(c2cc3C(N(C(c3cc2O1)=O)[*])=O)(C(F)(F)F)C(F)(F)F)=O",  # noqa: E501
+        "FC(C1(c2cc3C(N(c4ccc(-c5c(C(F)(F)F)cc([*])cc5)c(c4)C(F)(F)F)C(=O)c3cc2Oc2cc3C(=O)N([*])C(c3cc21)=O)=O)C(F)(F)F)(F)F",  # noqa: E501
+        "c1cc([*])cc(c1-c1ccc(N2C(=O)c3cc4c(C(c5c(cc6c(c5)C(=O)N([*])C6=O)O4)(C(F)(F)F)C(F)(F)F)cc3C2=O)cc1C(F)(F)F)C(F)(F)F",  # noqa: E501
+        "FC(c1c(ccc(c1)N1C(=O)c2cc3Oc4c(cc5C(N(C(c5c4)=O)[*])=O)C(C(F)(F)F)(C(F)(F)F)c3cc2C1=O)-c1c(cc(cc1)[*])C(F)(F)F)(F)F",  # noqa: E501
+        "FC(F)(F)c1c(-c2ccc(cc2C(F)(F)F)N2C(=O)c3c(cc4Oc5cc6C(N(C(=O)c6cc5C(C(F)(F)F)(c4c3)C(F)(F)F)[*])=O)C2=O)ccc(c1)[*]",  # noqa: E501
+        "FC(c1cc(N2C(=O)c3cc4c(cc3C2=O)Oc2c(C4(C(F)(F)F)C(F)(F)F)cc3C(=O)N([*])C(=O)c3c2)ccc1-c1ccc(cc1C(F)(F)F)[*])(F)F",  # noqa: E501
+        "C(C1(c2c(Oc3c1cc1C(=O)N(C(=O)c1c3)c1ccc(-c3ccc([*])cc3C(F)(F)F)c(C(F)(F)F)c1)cc1c(c2)C(=O)N([*])C1=O)C(F)(F)F)(F)(F)F",  # noqa: E501
     ]
     canonicalize_smiles = []
     for s in sm_init:
@@ -302,7 +304,7 @@ def test_canonicalize_tricky_2():
     one_smiles = list(set(canonicalize_smiles))
 
     assert one_smiles == [
-        "[*]c1ccc(-c2ccc(N3C(=O)c4cc5c(cc4C3=O)C(C(F)(F)F)(C(F)(F)F)c3cc4c(cc3O5)C(=O)N([*])C4=O)cc2C(F)(F)F)c(C(F)(F)F)c1"
+        "[*]c1ccc(-c2ccc(N3C(=O)c4cc5c(cc4C3=O)C(C(F)(F)F)(C(F)(F)F)c3cc4c(cc3O5)C(=O)N([*])C4=O)cc2C(F)(F)F)c(C(F)(F)F)c1"  # noqa: E501
     ]
 
 

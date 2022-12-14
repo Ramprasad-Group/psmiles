@@ -43,7 +43,8 @@ def test_dimer_double_bonds_at_star_complicated():
     one_smiles = list(set(dimerized))
 
     assert one_smiles == [
-        "[*]=C(C)Nc1ccc(-c2ccc(NC(C)=Nc3ccc(N=Nc4ccc(N=C(C)Nc5ccc(-c6ccc(NC(=[*])C)c(C(=O)O)c6)cc5C(=O)O)cc4)cc3)c(C(=O)O)c2)cc1C(=O)O"
+        "[*]=C(C)Nc1ccc(-c2ccc(NC(C)=Nc3ccc(N=Nc4ccc(N=C(C)Nc5ccc(-c6ccc(NC(=[*])C)"
+        "c(C(=O)O)c6)cc5C(=O)O)cc4)cc3)c(C(=O)O)c2)cc1C(=O)O"
     ]
 
 

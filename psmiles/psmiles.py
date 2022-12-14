@@ -1,3 +1,5 @@
+"""Base class to work with PSMILES strings"""
+
 from __future__ import annotations
 
 import logging
@@ -19,14 +21,25 @@ from psmiles.helper import in_ipynb
 
 class PolymerSmiles:
     def __init__(self, psmiles: str, deactivate_warnings: bool = False):
-        r"""
-        PolymerSmiles - Fun with PSMILES strings.
+        r"""Returns a PolymerSmiles object of the psmiles strings
 
-        PSMILES strings have two \* or [\*] that indicate the polymer repeat unit.
+        Note:
+            PSMILES strings have two \* or [\*] that indicate the polymer repeat unit.
+
+        Examples:
+            >>> from psmiles import PolymerSmiles as PS
+            >>> ps = PS("C(c1ccccc1)(C[*])[*]")
+            >>> ps.canonicalize
+            [*]CC([*])c1ccccc1
+            >>> ps.randomize
+            c1ccccc1C(C[*])[*]
+            >>> ps.randomize.canonicalize
+            [*]CC([*])c1ccccc1
 
         Args:
             psmiles (str): PSMILES string, e.g., [\*]CC[\*]
-            deactivate_warnings (bool, optional): Deactivate warnings. Defaults to False.
+            deactivate_warnings (bool, optional): Deactivate warnings.
+                Defaults to False.
         """
 
         self.psmiles = psmiles
@@ -46,9 +59,10 @@ class PolymerSmiles:
         ladder_dg = self.psmiles.count("[d]") + self.psmiles.count("[g]")
 
         if not deactivate_warnings:
-            assert (
-                ct_stars == 2 or ladder_dg == 2 or ladder_et == 2
-            ), f"Smiles must have two [*], two *, [e] and [t], or [d] and [g] : {self.psmiles}"
+            assert ct_stars == 2 or ladder_dg == 2 or ladder_et == 2, (
+                f"PSMILES strings must have two [*], two *, "
+                f"[e] and [t], or [d] and [g] : {self.psmiles}"
+            )
 
         # Check if ladder PSMILES string
         if ladder_et == 2 or ladder_dg == 2:
@@ -75,18 +89,15 @@ class PolymerSmiles:
                 "tested for ladder polymers."
             )
 
-    def __repr__(self) -> str:
-        return f"PolymerSmiles({self.psmiles})"
-
     def __str__(self) -> str:
         return self.psmiles
 
     def _repr_png_(self):
-        print(f"PSMILES: {self.__str__()}")
-        mol = self.mol
+        if not self.ladder and hasattr(self.mol, "_repr_png_"):
+            print(self.psmiles)
 
-        if not self.ladder and hasattr(mol, "_repr_png_"):
             # Highlight stars
+            mol = self.mol
             setattr(mol, "__sssAtoms", self.get_connection_info()["star"]["index"])
             return mol._repr_png_()
 
@@ -100,7 +111,8 @@ class PolymerSmiles:
             raise UserWarning(
                 f"The bond types of the SMILES string {self.psmiles} "
                 f"at the connection points (*) is not the same."
-                f"Bond types: {info['neighbor']['bond_type'][0]} - {info['neighbor']['bond_type'][1]}"
+                f"Bond types: {info['neighbor']['bond_type'][0]} "
+                f"- {info['neighbor']['bond_type'][1]}"
             )
 
     def get_connection_info(self, mol: Chem.RWMol = None, symbol: str = "*") -> Dict:
@@ -216,7 +228,7 @@ class PolymerSmiles:
 
     @property
     def randomize(self) -> PolymerSmiles:
-        """Randomized PSMILES string
+        """Randomized the PSMILES string
 
         Returns:
             PolymerSmiles: randomized PSMILES string
@@ -236,7 +248,7 @@ class PolymerSmiles:
 
     @property
     def periodic(self) -> PolymerSmiles:
-        """Creates periodic PSMILES string. Connects the end points of the PSMILES string.
+        """Creates a periodic PSMILES string by connecting the stars.
 
         Returns:
             PolymerSmiles: periodic PSMILES string
@@ -300,7 +312,7 @@ class PolymerSmiles:
         """Dimerize the PSMILES string
 
         Args:
-            how (int): 0 to connect to first star. 1 to connect to second star.
+            how (int): 0 to connect to the first star. 1 to connect to the second star.
 
         Returns:
             PolymerSmiles: dimerized PSMILES string
@@ -414,7 +426,8 @@ class PolymerSmiles:
             of the ci, mordred, and RDKit fingerprints.
 
         Args:
-            fp (str, optional): Choose fingerprint from pg, ci, rdkit, mordred, polyBERT. Defaults to 'ci'.
+            fp (str, optional): Choose fingerprint from 'pg', 'ci',
+                'rdkit', 'mordred', 'polyBERT'. Defaults to 'ci'.
 
         Returns:
             Union[Dict[str, float], np.ndarray]: Fingerprint vector
@@ -443,11 +456,13 @@ class PolymerSmiles:
             np.ndarray: polyBERT fingerprints
         """
         assert util.find_spec("sentence_transformers"), (
-            "PolyBERT fingerprints require the `sentence-transformers` Python package. "
-            "Please install with pip "
-            "`pip install git+https://github.com/Ramprasad-Group/psmiles.git -E polyBERT` "
-            "Or, with poetry "
-            "`poetry add git+https://github.com/Ramprasad-Group/psmiles.git -E polyBERT` "
+            "PolyBERT fingerprints require the 'sentence-transformers' Python package."
+            " Please install with "
+            "`pip install 'psmiles[polyBERT]@git+https://github.com/"
+            "Ramprasad-Group/psmiles.git'` "
+            "Or "
+            "`poetry add git+https://github.com/"
+            "Ramprasad-Group/psmiles.git -E polyBERT` "
         )
 
         from sentence_transformers import SentenceTransformer
@@ -485,10 +500,12 @@ class PolymerSmiles:
         """
         assert util.find_spec("mordred"), (
             "Mordred fingerprints require the `mordred` Python package. "
-            "Please install with pip "
-            "`pip install git+https://github.com/Ramprasad-Group/psmiles.git -E mordred` "
-            "Or, with poetry "
-            "`poetry add git+https://github.com/Ramprasad-Group/psmiles.git -E mordred` "
+            "Please install with "
+            "`pip install 'psmiles[mordred]@git+https://github.com/"
+            "Ramprasad-Group/psmiles.git`'"
+            "Or "
+            "`poetry add git+https://github.com/"
+            "Ramprasad-Group/psmiles.git -E mordred` "
         )
         from mordred import Calculator, descriptors
 
@@ -611,8 +628,10 @@ class PolymerSmiles:
         """Save the chemical drawing of the polymer
 
         Args:
-            filename (str, optional): Filename to save the drawing. Defaults to PSMILES string.
-            crop (bool, optional): If inkscape is available crop the figure. Defaults to True.
+            filename (str, optional): Filename to save the drawing.
+                Defaults to PSMILES string.
+            crop (bool, optional): If inkscape is available crop the figure.
+                Defaults to True.
         """
         import shutil
         import subprocess
@@ -630,7 +649,8 @@ class PolymerSmiles:
                 fn = Path(fp.name)
                 fn.write_text(svg)
                 subprocess.run(
-                    f"inkscape --export-area-drawing --export-type=svg --export-overwrite {fn}".split(),
+                    f"inkscape --export-area-drawing --export-type=svg "
+                    f"--export-overwrite {fn}".split(),
                     stderr=subprocess.DEVNULL,
                     stdout=subprocess.DEVNULL,
                 )
