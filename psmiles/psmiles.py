@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import pprint
+import random
 import re
 from importlib import util
 from typing import Dict, List, Union
@@ -266,7 +267,7 @@ class PolymerSmiles:
         sm = Chem.MolToSmiles(mol)
         sm = sm.replace("*", "[*]")
 
-        return PolymerSmiles(sm)
+        return PolymerSmiles(sm, deactivate_warnings=True)
 
     @property
     def canonicalize(self) -> PolymerSmiles:
@@ -580,7 +581,6 @@ class PolymerSmiles:
         Returns:
             PolymerSmiles: alternating copolymer PSMILES
         """
-        logging.warning("Function is experimental. Please check results carefully.")
 
         if not isinstance(other, PolymerSmiles):
             other = PolymerSmiles(other)
@@ -670,3 +670,99 @@ class PolymerSmiles:
         Path(filename).write_text(svg)
 
         logging.debug(f"Drawing saved to {filename}")
+
+    def linear_copolymer(
+        self,
+        other: Union[PolymerSmiles, str],
+        pattern: Union[List[str], List[int]] = [0, 0, 0, 1, 1, 1],
+    ) -> PolymerSmiles:
+        """Create linear copolymers from two monomers.
+        Useful to create gradient and block copolymers.
+
+        Examples:
+            >>> from psmiles import PolymerSmiles as PS
+            >>> ps1 = PS("[*]CC[*]")
+            >>> ps2 = PS("[*]C=C[*]")
+            >>> ps1.linear_copolymer(ps2)
+            [*]C=CC=CC=CCCCCCC[*]
+            >>> # Block polymer with 5A and 5B
+            >>> ps1.linear_copolymer(ps2, [0]*5 + [1]*5)
+            [*]C=CC=CC=CC=CC=CCCCCCCCCCC[*]
+            >>> # Gradient polymer
+            >>> gradient_pattern = 'AAAAAABAABBAABABBBAABBBBBB'
+            >>> ps1.linear_copolymer(ps2, gradient_pattern)
+            [*]C=CC=CC=CC=CC=CC=CCCCCC=CC=CC=CCCC=CCCCCC=CC=CCCCCC=CCCCCCCCCCCCC[*]
+
+        Args:
+            other (Union[PolymerSmiles, str]): Monomer B
+            pattern (Union[List[str], List[int]], optional): Repetition pattern of
+                monomer A and B. Can be a string of A and B or a list of 0 and 1.
+                Defaults to [0,0,0,1,1,1].
+
+        Returns:
+            PolymerSmiles: Linear copolymer
+        """
+        logging.warning("Function is experimental. Please check results carefully.")
+
+        if not isinstance(other, PolymerSmiles):
+            other = PolymerSmiles(other)
+        if isinstance(pattern, str):
+            pattern = [0 if x == "A" else 1 for x in pattern]
+
+        # Replace with self and other
+        ps_pattern = [self if x == 0 else other for x in pattern]
+
+        ps_linear = ps_pattern[0]
+        for ps_add in ps_pattern[1:]:
+            ps_linear = ps_linear.alternating_copolymer(ps_add)
+
+        return ps_linear
+
+    def random_copolymer(
+        self,
+        other: Union[PolymerSmiles, str],
+        ratio: float = 0.5,
+        units: int = 10,
+    ) -> PolymerSmiles:
+        """Create random copolymer from two monomers.
+
+        Examples:
+            >>> from psmiles import PolymerSmiles as PS
+            >>> ps1 = PS("[*]CC[*]")
+            >>> ps2 = PS("[*]CC([*])c1ccccc1")
+            >>> ps1.random_copolymer(ps2, ratio=0.5, units=6)
+            [*]CCCCCC(CCCC(CC([*])c1ccccc1)c1ccccc1)c1ccccc1
+            >>> # Set seed for reproducible copolymers
+            >>> import random
+            >>> random.seed(10)
+            >>> ps1.random_copolymer(ps2, units=4)
+            [*]CCCCCC(CC([*])c1ccccc1)c1ccccc1
+            >>> ps1.random_copolymer(ps2, units=4)
+            [*]CCCC(CCCC([*])c1ccccc1)c1ccccc1
+
+        Args:
+            other (Union[PolymerSmiles, str]): Monomer B
+            ratio (float, optional): Ratio of monomer A and B.
+                Must be between 0 and 1. Defaults to 0.5.
+            units (int, optional): Total number of monomers. Defaults to 10.
+
+        Returns:
+            PolymerSmiles: Random copolymer
+        """
+
+        logging.warning("Function is experimental. Please check results carefully.")
+
+        if not isinstance(other, PolymerSmiles):
+            other = PolymerSmiles(other)
+
+        # Compute number of monomers A and B
+        monomer_a = round(units * ratio)
+        monomer_b = units - monomer_a
+
+        # Create initial pattern
+        pattern = [0] * monomer_a + [1] * monomer_b
+
+        # Shuffle list
+        random.shuffle(pattern)
+
+        return self.linear_copolymer(other, pattern)
