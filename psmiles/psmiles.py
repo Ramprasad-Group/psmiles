@@ -44,7 +44,6 @@ class PolymerSmiles:
 
         self.psmiles = psmiles
         self.ladder = False
-        self.generator_circular = rdFingerprintGenerator.GetMorganGenerator()
 
         # convert * to [*]
         stars_no_bracket = re.findall(r"(?<!\[)\*(?!\])", self.psmiles)
@@ -426,12 +425,13 @@ class PolymerSmiles:
             of the ci, mordred, and RDKit fingerprints.
 
         Args:
-            fp (str, optional): Choose fingerprint from 'pg', 'ci',
-                'rdkit', 'mordred', 'polyBERT'. Defaults to 'ci'.
+            fp (str, optional): Choose fingerprint from 'ci',
+                'rdkit', 'polyBERT', 'mordred', 'pg'. Defaults to 'ci'.
 
         Returns:
             Union[Dict[str, float], np.ndarray]: Fingerprint vector
         """
+        fp = fp.lower()
         if fp == "pg":
             return self.fingerprint_pg
         elif fp == "ci":
@@ -440,17 +440,17 @@ class PolymerSmiles:
             return self.fingerprint_mordred
         elif fp == "rdkit":
             return self.fingerprint_rdkit
-        elif fp == "polyBERT":
+        elif fp == "polybert" or fp == "pb":
             return self.fingerprint_polyBERT
         else:
             raise UserWarning(f"Fingerprint {fp} unknown.")
 
     @property
     def fingerprint_polyBERT(self) -> np.ndarray:
-        """Returns the polyBERT fingerprint of the PSMILES string
+        """Compute the polyBERT fingerprint
 
         Note:
-            This will install pull polyBERT from the hugging face hub.
+            Calling this will pull polyBERT from the hugging face hub.
 
         Returns:
             np.ndarray: polyBERT fingerprints
@@ -473,7 +473,7 @@ class PolymerSmiles:
 
     @property
     def fingerprint_pg(self) -> Dict[str, float]:
-        """Returns the PG fingerprint of the PSMILES string
+        """Compute the PG fingerprint
 
         Returns:
             Dict[str, float]: PG fingerprints
@@ -490,10 +490,10 @@ class PolymerSmiles:
 
     @property
     def fingerprint_mordred(self) -> Dict[str, float]:
-        """Returns the mordred fingerprint
+        """Compute the mordred fingerprint
 
         Note:
-            PSMILES string is canonicalized before computation
+            PSMILES string is canonicalized before the computation
 
         Returns:
             Dict[str, float]: mordred fingerprints
@@ -521,34 +521,29 @@ class PolymerSmiles:
 
     @property
     def fingerprint_circular(self) -> np.ndarray:
-        """Returns the circular (Morgen) count fingerprint
+        """Compute the circular (Morgen) count fingerprint
 
         Note:
-            PSMILES string is canonicalized before computation
+            PSMILES string is canonicalized before the computation
 
         Returns:
             numpy.ndarray: circular fingerprint
         """
-
-        return self.generator_circular.GetCountFingerprintAsNumPy(
-            self.canonicalize.mol
-        ).astype(int)
+        fp_gen = rdFingerprintGenerator.GetMorganGenerator()
+        return fp_gen.GetCountFingerprintAsNumPy(self.canonicalize.mol).astype(int)
 
     @property
     def fingerprint_rdkit(self) -> np.ndarray:
-        """Returns the RDKit count fingerprint
+        """Compute the RDKit count fingerprint
 
         Note:
-            PSMILES string is canonicalized before computation
+            PSMILES string is canonicalized before the computation
 
         Returns:
             numpy.ndarray: RDKit fingerprint
         """
-        from rdkit.Chem import rdFingerprintGenerator
-
         fp_gen = rdFingerprintGenerator.GetRDKitFPGenerator()
-        fp_mono = fp_gen.GetCountFingerprintAsNumPy(self.canonicalize.mol).astype(int)
-        return fp_mono
+        return fp_gen.GetCountFingerprintAsNumPy(self.canonicalize.mol).astype(int)
 
     def is_similar(self, other: Union[PolymerSmiles, str], fp="ci") -> float:
         """Computes the cosine similarity of two PSMILES stings.
