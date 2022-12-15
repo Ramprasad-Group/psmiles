@@ -550,7 +550,7 @@ class PolymerSmiles:
         fp_mono = fp_gen.GetCountFingerprintAsNumPy(self.canonicalize.mol).astype(int)
         return fp_mono
 
-    def is_similar(self, other: Union[PolymerSmiles, str], fp="CI") -> float:
+    def is_similar(self, other: Union[PolymerSmiles, str], fp="ci") -> float:
         """Computes the cosine similarity of two PSMILES stings.
 
         Args:
