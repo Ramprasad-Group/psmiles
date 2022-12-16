@@ -28,6 +28,7 @@ class PolymerSmiles:
             PSMILES strings have two \* or [\*] that indicate the polymer repeat unit.
 
         Examples:
+            ``` py
             >>> from psmiles import PolymerSmiles as PS
             >>> ps = PS("C(c1ccccc1)(C[*])[*]")
             >>> ps.canonicalize
@@ -36,6 +37,7 @@ class PolymerSmiles:
             c1ccccc1C(C[*])[*]
             >>> ps.randomize.canonicalize
             [*]CC([*])c1ccccc1
+            ```
 
         Args:
             psmiles (str): PSMILES string, e.g., [\*]CC[\*]
@@ -308,11 +310,12 @@ class PolymerSmiles:
             Chem.MolFromSmiles(self.canonicalize.psmiles.replace("[*]", "[At]"))
         )
 
-    def dimer(self, how: int = 0) -> PolymerSmiles:
+    def dimer(self, how: int = 1) -> PolymerSmiles:
         """Dimerize the PSMILES string
 
         Args:
             how (int): 0 to connect to the first star. 1 to connect to the second star.
+                Default to 1.
 
         Returns:
             PolymerSmiles: dimerized PSMILES string
@@ -391,32 +394,6 @@ class PolymerSmiles:
             Chem.MolFromSmiles: RDKit mol object
         """
         return Chem.RWMol(Chem.MolFromSmiles(self.psmiles))
-
-    @property
-    def show_all(self) -> Chem.Draw.MolsToGridImage:
-        """Draws all SMILES string variants and plot
-
-        Note:
-            Does only work in jupyter notebooks.
-
-        Returns:
-            Chem.Draw.MolsToGridImage: Drawing
-        """
-
-        mols = [
-            self.mol,
-            self.canonicalize.mol,
-            self.dimer().mol,
-        ]
-        names = [
-            "SMI=" + self.psmiles,
-            "Can= " + self.canonicalize.psmiles,
-            "Dim=" + self.dimer().psmiles,
-        ]
-
-        return Chem.Draw.MolsToGridImage(
-            mols, molsPerRow=4, legends=names, subImgSize=(250, 200)
-        )
 
     def fingerprint(self, fp="ci") -> Union[Dict[str, float], np.ndarray]:
         """Returns fingerprints of the PSMILES string.
@@ -676,22 +653,24 @@ class PolymerSmiles:
         other: Union[PolymerSmiles, str],
         pattern: Union[List[str], List[int]] = [0, 0, 0, 1, 1, 1],
     ) -> PolymerSmiles:
-        """Create linear copolymers from two monomers.
+        """Create a linear copolymer from two monomers.
         Useful to create gradient and block copolymers.
 
         Examples:
+            ``` py
             >>> from psmiles import PolymerSmiles as PS
             >>> ps1 = PS("[*]CC[*]")
             >>> ps2 = PS("[*]C=C[*]")
             >>> ps1.linear_copolymer(ps2)
-            [*]C=CC=CC=CCCCCCC[*]
+            [*]C=CC=CCCCCCCC=C[*]
             >>> # Block polymer with 5A and 5B
-            >>> ps1.linear_copolymer(ps2, [0]*5 + [1]*5)
-            [*]C=CC=CC=CC=CC=CCCCCCCCCCC[*]
+            >>> ps1.linear_copolymer(ps2, [0]*4 + [1]*4)
+            [*]C=CC=CCCCCCCCCC=CC=C[*]
             >>> # Gradient polymer
             >>> gradient_pattern = 'AAAAAABAABBAABABBBAABBBBBB'
             >>> ps1.linear_copolymer(ps2, gradient_pattern)
-            [*]C=CC=CC=CC=CC=CC=CCCCCC=CC=CC=CCCC=CCCCCC=CC=CCCCCC=CCCCCCCCCCCCC[*]
+            [*]C=CC=CC=CC=CC=CCCC=CC=CCCCCCCCCCCCCCCCCC=CCCCCC=CC=CCCCCC=CC=CC=C[*]
+            ```
 
         Args:
             other (Union[PolymerSmiles, str]): Monomer B
@@ -714,7 +693,7 @@ class PolymerSmiles:
 
         ps_linear = ps_pattern[0]
         for ps_add in ps_pattern[1:]:
-            ps_linear = ps_linear.alternating_copolymer(ps_add)
+            ps_linear = ps_linear.alternating_copolymer(ps_add, [1, 0])
 
         return ps_linear
 
@@ -724,21 +703,23 @@ class PolymerSmiles:
         ratio: float = 0.5,
         units: int = 10,
     ) -> PolymerSmiles:
-        """Create random copolymer from two monomers.
+        """Create a random copolymer from two monomers.
 
         Examples:
+            ``` py
             >>> from psmiles import PolymerSmiles as PS
             >>> ps1 = PS("[*]CC[*]")
             >>> ps2 = PS("[*]CC([*])c1ccccc1")
             >>> ps1.random_copolymer(ps2, ratio=0.5, units=6)
-            [*]CCCCCC(CCCC(CC([*])c1ccccc1)c1ccccc1)c1ccccc1
+            [*]CCC(CCCCCCC(CC([*])c1ccccc1)c1ccccc1)c1ccccc1
             >>> # Set seed for reproducible copolymers
             >>> import random
             >>> random.seed(10)
             >>> ps1.random_copolymer(ps2, units=4)
-            [*]CCCCCC(CC([*])c1ccccc1)c1ccccc1
+            [*]CCCC(CC(CC[*])c1ccccc1)c1ccccc1
             >>> ps1.random_copolymer(ps2, units=4)
-            [*]CCCC(CCCC([*])c1ccccc1)c1ccccc1
+            [*]CCC(CCC(CC[*])c1ccccc1)c1ccccc1
+            ```
 
         Args:
             other (Union[PolymerSmiles, str]): Monomer B
