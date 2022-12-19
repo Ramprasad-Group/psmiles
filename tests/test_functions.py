@@ -5,7 +5,7 @@ def test_linear_copolymer():
     ps1 = PS("[*]CC[*]")
     ps2 = PS("[*]C=C[*]")
     lc = ps1.linear_copolymer(ps2)
-    assert str(lc) == "[*]C=CC=CC=CCCCCCC[*]"
+    assert str(lc) == "[*]C=CC=CCCCCCCC=C[*]"
 
 
 def test_block_copolymer():
@@ -13,7 +13,7 @@ def test_block_copolymer():
     ps1 = PS("[*]CC[*]")
     ps2 = PS("[*]C=C[*]")
     lc = ps1.linear_copolymer(ps2, [0] * 5 + [1] * 5)
-    assert str(lc) == "[*]C=CC=CC=CC=CC=CCCCCCCCCCC[*]"
+    assert str(lc) == "[*]C=CC=CC=CCCCCCCCCCCC=CC=C[*]"
 
 
 def test_gradient_copolymer():
@@ -24,7 +24,7 @@ def test_gradient_copolymer():
     lc = ps1.linear_copolymer(ps2, gradient_pattern)
     assert (
         str(lc)
-        == "[*]C=CC=CC=CC=CC=CC=CCCCCC=CC=CC=CCCC=CCCCCC=CC=CCCCCC=CCCCCCCCCCCCC[*]"
+        == "[*]C=CC=CC=CC=CC=CCCC=CC=CCCCCCCCCCCCCCCCCC=CCCCCC=CC=CCCCCC=CC=CC=C[*]"
     )
 
 
@@ -35,4 +35,4 @@ def test_random_copolymer():
     ps1 = PS("[*]CC[*]")
     ps2 = PS("[*]CC([*])c1ccccc1")
     lc = ps1.random_copolymer(ps2, ratio=0.5, units=6)
-    assert str(lc) == "[*]CC(CCCC(CCCCC(C[*])c1ccccc1)c1ccccc1)c1ccccc1"
+    assert str(lc) == "[*]CCC(CCCCC(CCCC([*])c1ccccc1)c1ccccc1)c1ccccc1"

@@ -13,4 +13,4 @@ def test_similarity():
         score = PS("[*]COCC[*]").is_similar(PS("[*]CCO[*]"), fp)
         similarity_score.append(score)
 
-    assert similarity_score == [0.80257, 0.70296, 0.15452]
+    assert similarity_score == [0.80257, 0.70296, 0.11315]

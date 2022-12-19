@@ -20,7 +20,7 @@ def test_dimer_double_bonds_at_star():
         dimerized.append(PS(s).canonicalize.dimer().psmiles)
     one_smiles = list(set(dimerized))
 
-    assert one_smiles == ["[*]c1ccc(N=CNNC=Nc2ccc([*])cc2)cc1"]
+    assert one_smiles == ["[*]NC=Nc1ccc(NC=Nc2ccc([*])cc2)cc1"]
 
 
 def test_dimer_double_bonds_at_star_complicated():
@@ -43,8 +43,8 @@ def test_dimer_double_bonds_at_star_complicated():
     one_smiles = list(set(dimerized))
 
     assert one_smiles == [
-        "[*]=C(C)Nc1ccc(-c2ccc(NC(C)=Nc3ccc(N=Nc4ccc(N=C(C)Nc5ccc(-c6ccc(NC(=[*])C)"
-        "c(C(=O)O)c6)cc5C(=O)O)cc4)cc3)c(C(=O)O)c2)cc1C(=O)O"
+        "[*]=Nc1ccc(N=C(C)Nc2ccc(-c3ccc(NC(C)=Nc4ccc(N=C(C)Nc5ccc(-c6ccc(NC(=[*])C)"
+        "c(C(=O)O)c6)cc5C(=O)O)cc4)c(C(=O)O)c3)cc2C(=O)O)cc1"
     ]
 
 
@@ -68,7 +68,7 @@ def test_dimer_stereo_chemistry():
     one_smiles = list(set(dimerized))
 
     assert one_smiles == [
-        "[*]C(CC=CC=CCC([*])CCCOC(=O)/C=C/c1ccccc1)CCCOC(=O)/C=C/c1ccccc1"
+        "[*]C=CCC(C=CCC([*])CCCOC(=O)/C=C/c1ccccc1)CCCOC(=O)/C=C/c1ccccc1"
     ]
 
 
@@ -101,4 +101,4 @@ def test_dimer_stereo_chemistry_trans():
         dimerized.append(PS(s).canonicalize.dimer().psmiles)
     one_smiles = list(set(dimerized))
 
-    assert one_smiles == ["[*]/C(=C/C=C(/[*])C(C)C)C(C)C"]
+    assert one_smiles == ["[*]/C=C(/C=C(/[*])C(C)C)C(C)C"]
