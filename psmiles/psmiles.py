@@ -651,7 +651,7 @@ class PolymerSmiles:
     def linear_copolymer(
         self,
         other: Union[PolymerSmiles, str],
-        pattern: Union[List[str], List[int]] = [0, 0, 0, 1, 1, 1],
+        pattern: Union[str, List[int]] = [0, 0, 0, 1, 1, 1],
     ) -> PolymerSmiles:
         """Create a linear copolymer from two monomers.
         Useful to create gradient and block copolymers.
@@ -674,7 +674,7 @@ class PolymerSmiles:
 
         Args:
             other (Union[PolymerSmiles, str]): Monomer B
-            pattern (Union[List[str], List[int]], optional): Repetition pattern of
+            pattern (Union[str, List[int]], optional): Repetition pattern of
                 monomer A and B. Can be a string of A and B or a list of 0 and 1.
                 Defaults to [0,0,0,1,1,1].
 
