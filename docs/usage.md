@@ -1,4 +1,4 @@
-# Usage
+# General usage
 
 Simply create an object of the class `PolymerSmiles` using your PSMILES string. The object has functions to compute properties or manipulate the PSMILES string. For example, canonicalize a PSMILES string with
 
@@ -9,7 +9,7 @@ Simply create an object of the class `PolymerSmiles` using your PSMILES string. 
 [*]CC([*])c1ccccc1
 ```
 
-If you work in a Jupyter notebook, this will also show the chemical drawing.
+If you work in a Jupyter notebook, this will also show the chemical drawing. Check out the other examples.
 
 
 Get the polyBERT fingerprint with

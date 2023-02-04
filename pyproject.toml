@@ -22,12 +22,13 @@ mkdocs = {version = "^1.4.2", optional = true}
 mkdocs-material = {version = "^8.5.11", optional = true}
 mkdocstrings = {extras = ["python"], version = "^0.19.0"}
 mkdocstrings-python = {version = "^0.8.2", optional = true}
+mkdocs-jupyter = {version = "^0.22.0", optional = true}
 
 
 [tool.poetry.extras]
 mordred = ["mordred"]
 polyBERT = ["sentence-transformers"]
-docs = ["mkdocstrings", "mkdocs", "mkdocs-material", "mkdocstrings-python"]
+docs = ["mkdocstrings", "mkdocs", "mkdocs-material", "mkdocstrings-python", "mkdocs-jupyter"]
 
 [tool.poetry.group.dev.dependencies]
 black = {version = "^22.8.0", allow-prereleases = true}

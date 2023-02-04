@@ -42,12 +42,16 @@ plugins:
   - autorefs
   - mkdocstrings:
       default_handler: python
+  - mkdocs-jupyter:
+      theme: dark
 
 
 nav:
   - Fun with P🙂s strings: index.md
   - Install: install.md
   - Usage: usage.md
+  - Examples:
+    - Create polymers: examples/create_polymers.ipynb
   - Reference:
     - PSMILES: api/psmiles.md
     - Canonicalization: api/canonicalize.md
