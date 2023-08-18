@@ -2,7 +2,7 @@ from psmiles import PolymerSmiles as PS
 
 
 def test_similarity():
-    fp_names = [
+    fp_names = [ 
         "ci",
         "rdkit",
         "mordred",
