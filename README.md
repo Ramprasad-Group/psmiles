@@ -1,5 +1,7 @@
 # PSMILES - Fun with P🙂s strings
 
+# IMPORTANT NOTE: The code and data shared here is available for academic non-commercial use only
+
 The `psmiles` Python package provides tools and functions to work with polymer SMILES (PSMILES or P🙂s) strings. PSMILES strings are a chemical language to represent polymers.
 
 ⏩ See the [Documentation](https://psmiles.readthedocs.io/)
